@@ -29,4 +29,4 @@ def get_posts():
 def create_posts(new_post: Post):
     return {"data": "new post"}
 
-# check video
+# check video and add timestamp
