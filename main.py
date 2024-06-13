@@ -28,3 +28,5 @@ def get_posts():
 #     return {"new_post": f"title {payload['title']} content {payload['content']}"}
 def create_posts(new_post: Post):
     return {"data": "new post"}
+
+# check video
