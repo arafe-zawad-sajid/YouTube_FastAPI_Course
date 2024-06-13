@@ -27,6 +27,7 @@ def get_posts():
 #     print(payload)
 #     return {"new_post": f"title {payload['title']} content {payload['content']}"}
 def create_posts(new_post: Post):
+    print(new_post)
     return {"data": "new post"}
 
 # check video and add timestamp
