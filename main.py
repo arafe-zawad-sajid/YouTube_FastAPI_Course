@@ -36,6 +36,12 @@ def find_post(id):
     for p in my_posts:
         if p["id"] == id:
             return p
+        
+
+def find_post_index(id):
+    for i, p in enumerate(my_posts):
+        if p["id"] == id:
+            return i
 
 
 #path operation/route
@@ -54,6 +60,7 @@ async def root():  #function
 #     return {"message2": "welcome to my api"}
 
 
+#--- Get Posts---#
 @app.get("/posts")
 def get_posts():
     # print(my_posts[0].get("title"))
@@ -65,6 +72,7 @@ def get_posts():
 #     return {"message": "welcome to my api"}
 
 
+#--- Create Posts ---#
 # @app.post("/createposts")
 # def create_posts(payload: dict = Body(...)):  #extracting payload
 #     print(payload)
@@ -76,6 +84,7 @@ def get_posts():
     # print(new_post.published)
     # return {"data": "new post"}
 
+#sending status code with the decorator
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(new_post: Post):
     post_dict = new_post.dict()  #new_post receives some JSON data from the Post request Body
@@ -86,6 +95,7 @@ def create_posts(new_post: Post):
     return {"data": post_dict}  #sends this to the Post request
 
 
+#--- Get A Post ---#
 # @app.get("/posts/{id}")  #this "id" field is a path parameter, path params are always str
 # def get_post(id: int):  #data type validation
     # print(id)
@@ -95,7 +105,7 @@ def create_posts(new_post: Post):
 def get_post(id: int, response: Response):
     post = find_post(id)
     if not post:
-        # response.status_code = 404  #write status code 
+        # response.status_code = 404  #write status code
         # response.status_code = status.HTTP_404_NOT_FOUND  #use enum to find status code
         # return {"message": f"post with id: {id} was not found"}
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -111,9 +121,20 @@ def get_post(id: int, response: Response):
 #     return {"detail": post}
 
 
+#--- Delete A Post ---#
+#sending status code with the decorator
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id: int):
+    index = find_post_index(id)
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id: {id} does not exist")
+    my_posts.pop(index)
+    # return {"message": f"post with id: {id} was successfully deleted"}
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 
 
 
-#timestamp: https://youtu.be/0sOvCWFmrtA?si=iFn4DMQ1ejvBnQgf&t=7310
+#timestamp: https://youtu.be/0sOvCWFmrtA?si=YKRM81nyR3nMGd26&t=7837
