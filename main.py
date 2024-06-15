@@ -134,7 +134,22 @@ def delete_post(id: int):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+#--- Update A Post ---#
+@app.put("/posts/{id}")
+def update_post(id: int, post: Post):  #validate the data from frontend that is stored in post with our Post schema
+    # print(post)   #default published and rating values from the schema
+    index = find_post_index(id)
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id: {id} does not exist")
+    post_dict = post.dict()  #does not have id since it follows the schema
+    post_dict["id"] = id  #adds id
+    my_posts[index] = post_dict  #updates the array at that index
+    return {"data": post_dict}
 
 
 
-#timestamp: https://youtu.be/0sOvCWFmrtA?si=YKRM81nyR3nMGd26&t=7837
+
+
+
+#timestamp: https://youtu.be/0sOvCWFmrtA?si=VqA4ituRSlbWZZg7&t=8315
