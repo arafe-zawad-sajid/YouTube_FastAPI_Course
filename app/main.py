@@ -152,4 +152,4 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 
 
-#timestamp: https://youtu.be/0sOvCWFmrtA?si=8lBz45wvEO_K_Hv1&t=9266
+#upto 3:13:10 - https://youtu.be/0sOvCWFmrtA?si=J2t9c2FcOR1E3xe1&t=11591
