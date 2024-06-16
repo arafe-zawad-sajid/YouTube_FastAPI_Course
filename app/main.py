@@ -158,10 +158,13 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 # SELECT * FROM products WHERE id=10;  #info of a specific id
 
+# SELECT * FROM products WHERE name='TV';  #varchar in single quotes, double quotes give error
+
+#
 
 
 
 
 
 
-#upto 3:21:25 - https://youtu.be/0sOvCWFmrtA?si=bW5Zm6hRdIo5pumc&t=12085
+#upto 3:23:30 - https://youtu.be/0sOvCWFmrtA?si=djnC8BsBURYPAUOz&t=12215
