@@ -148,8 +148,20 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
     return {"data": post_dict}
 
 
+#--- PostgreSQL ---#
+# SELECT * FROM products;  #select all columns from products table
+
+# SELECT name, id FROM products;  #select name, id columns from products table
+#capitalization does not matter but SQL syntax keywords should be all caps
+
+# SELECT id AS products_id, name AS product_name FROM products;  #renaming a col while viewing
+
+# SELECT * FROM products WHERE id=10;  #info of a specific id
 
 
 
 
-#upto 3:13:10 - https://youtu.be/0sOvCWFmrtA?si=J2t9c2FcOR1E3xe1&t=11591
+
+
+
+#upto 3:21:25 - https://youtu.be/0sOvCWFmrtA?si=bW5Zm6hRdIo5pumc&t=12085
