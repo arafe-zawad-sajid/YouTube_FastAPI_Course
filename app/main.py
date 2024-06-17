@@ -160,11 +160,48 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 # SELECT * FROM products WHERE name='TV';  #varchar in single quotes, double quotes give error
 
-#
+# SELECT * FROM products WHERE price>80;
+# SELECT * FROM products WHERE price>=80;
+
+# SELECT * FROM products WHERE inventory!=0;
+# SELECT * FROM products WHERE inventory<>0;
+
+# SELECT * FROM products WHERE inventory>0 AND price>20;
+
+# SELECT * FROM products WHERE price>100 OR price<20;
+
+# SELECT * FROM products WHERE id=1 OR id=2 OR id=3;
+# SELECT * FROM products WHERE id IN (1,2,3);  #products with id in the list
+
+# SELECT * FROM products WHERE name LIKE 'TV%';  #products starting with TV
+# SELECT * FROM products WHERE name LIKE '%en%';  #products that does not have 'en' in their name
+# SELECT * FROM products WHERE name NOT LIKE '%en%';  #products that does not have 'en' in their name
+
+# SELECT * FROM products ORDER BY price DESC;  #orders in ASC by default
+# SELECT * FROM products ORDER BY inventory DESC, price ASC;  #sorts by inventory DESC then as tie breaker we sort by price ASC
+# SELECT * FROM products ORDER BY created_at;  #oldest to newest, DESC to reverse
+
+# SELECT * FROM products WHERE price>20 ORDER BY created_at DESC;
+
+# SELECT * FROM products WHERE price>10 LIMIT 2;
+
+# SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 2;  #offset 2 ignores/skips past the first 2
 
 
 
 
 
 
-#upto 3:23:30 - https://youtu.be/0sOvCWFmrtA?si=djnC8BsBURYPAUOz&t=12215
+
+
+
+
+
+
+
+
+
+
+
+
+#upto 3:42:45 - https://youtu.be/0sOvCWFmrtA?si=RbXrWjC-GGEP6TrV&t=13365
