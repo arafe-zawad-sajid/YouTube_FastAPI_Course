@@ -37,12 +37,18 @@ SELECT * FROM products WHERE price>10 LIMIT 2;
 
 SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 2;
 
-INSERT INTO products (name, price, inventory) VALUES ('Tortilla', 4, 1000)
+INSERT INTO products (name, price, inventory) VALUES ('Tortilla', 4, 1000);
 
+INSERT INTO products (price, name, inventory) VALUES (10, 'Burger', 1000) RETURNING id;
+INSERT INTO products (price, name, inventory) VALUES (10000, 'Car', 1000), (50, 'Laptop', 25), (60, 'Monitor', 4) RETURNING *;
 
+DELETE FROM products WHERE id=10;
+DELETE FROM products WHERE id=11 RETURNING *;
+DELETE FROM products WHERE inventory=0;
 
-
-
+UPDATE products SET name='Flower', price=40 WHERE id=25;
+UPDATE products SET is_sale=true WHERE id=30 RETURNING *;
+UPDATE products SET is_sale=true WHERE id>15 RETURNING *;
 
 
 
