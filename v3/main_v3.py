@@ -7,7 +7,7 @@ from . import models, schemas
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 
-models.Base.metadata.create_all(bind=engine)  #creates db tables
+models.Base.metadata.create_all(bind=engine)  #creates db tables based on models.Base schema
 
 app = FastAPI()  #fastapi instance
 
@@ -44,7 +44,7 @@ async def root():  #function
 
 #--- Get Posts---#
 @app.get("/posts")
-def get_posts(db: Session=Depends(get_db)):
+def get_posts(db: Session=Depends(get_db)):  #creates session to our db so that we can perform some operations
     # cursor.execute(""" SELECT * FROM posts """)
     # posts = cursor.fetchall()  #retrieve multiple posts
 
@@ -121,6 +121,20 @@ def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):
     return {"data": post_query.first()}
 
 
+
+#one way to interract with the db is to use the def postgresql driver (psycopg2) 
+#to talk to a postgresql db using sql queries
+#another way to work with db is to use orm, it's a layer abstraction between our db and fastapi app
+#instead of talking directly to a db we talk to the orm which will in turn talk to the db
+#no more sql, we use python code that ultimately translates to sql themselves
+#when using orm we don't rely on regular sql queries, instead we use some basic python method
+#traditionally, our fastapi server talks to our db by sending sql using def postgresql driver (psycopg2)
+#for orm, fastapi uses regular python to send commands to orm 
+#which converts it to regular sql using the same db driver (psycopg2) to talk to the db
+#databases only talk sql
+#sql alchemy is the most popular python orm, it's a standalone lib
+#sql alchemy doesn't actually know how to talk to a db, it uses the underlying driver psycopg2
+
 #schema/pydantic model vs. orm/sql alchemy model
 #schemas.Post class extends BaseModel which is imported from pydantic lib, this is our schema
 #it's being referenced in our path operations, it defines the shape of our requests and response
@@ -131,4 +145,4 @@ def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):
 
 
 
-#upto upto 5:39:00 - https://youtu.be/0sOvCWFmrtA?si=Pg2BZ-GBKjk0e1a2&t=20350
+#upto upto 5:00:00 - https://youtu.be/0sOvCWFmrtA?si=7VlN0bXQ_Jr0tqhZ&t=18064
