@@ -1,16 +1,20 @@
-#--- With ORM ---#
+#--- With ORM (SQLAlchemy) ---#
 
 #run: "uvicorn app.main:app" and append: "--reload"
 
 from typing import Optional
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+from . import models
+from .database import engine, get_db
+from sqlalchemy.orm import Session
 
+models.Base.metadata.create_all(bind=engine)  #creates db tables
 
 app = FastAPI()  #fastapi instance
 
@@ -21,36 +25,6 @@ class Post(BaseModel):
     title: str  #mandatory property
     content: str  #mandatorty property
     published: bool = True  #optional property
-    # rating: Optional[int] = None  #fully optional field
-
-
-#--- Connecting to Database ---#
-while True:
-    try:
-        conn = psycopg2.connect(host='localhost', database='fastapi', 
-                                user='postgres', password='admin', cursor_factory=RealDictCursor)
-        
-        cursor = conn.cursor()
-        print('DB conn was successful')
-        break
-    except Exception as error:
-        print('DB conn failed')
-        print('Error:', error)
-        time.sleep(2)
-
-
-my_posts = [
-    {
-        "title": "example title 1",  #my_posts[0].get("title")
-        "content": "example content 1",  #my_posts[0]["content"]
-        "id": 1
-    },
-    {
-        "title": "example title 2",
-        "content": "example content 2",
-        "id": 2 
-    }
-]
 
 
 #path operation/route
@@ -59,27 +33,27 @@ async def root():  #function
     return {"message": "welcome to my api"}  #sends this to the Get request
 
 
+#--- Test Route ---#
+# @app.get("/test")
+# def test_posts(db: Session=Depends(get_db)):
+#     # posts = db.query(models.Post)  #a sql querry that hasn't been run yet
+#     posts = db.query(models.Post).all()  #all() runs the sql query
+#     # print(posts)  #this is a models.Post obj
+#     return {'data': posts}
+
+
 #--- Get Posts---#
 @app.get("/posts")
-def get_posts():
-    cursor.execute(""" SELECT * FROM posts """)
-    posts = cursor.fetchall()  #retrieve multiple posts
-    # print(posts)
+def get_posts(db: Session=Depends(get_db)):
+    posts = db.query(models.Post).all()
     return {"data": posts}
 
 
 #--- Create Posts ---#
 #sending status code with the decorator
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_posts(post: Post):
-    # cursor.execute(""" INSERT INTO posts (title, content, published)
-    #                VALUES ({new_post.title}, {new_post.content}, {new_post.published}) """)
-    #using f strings makes us vulnerable to SQL injection attack
-    cursor.execute(""" INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """, 
-                   (post.title, post.content, post.published))
-    #here we sanitize the input, more secured
-    new_post = cursor.fetchone()
-    conn.commit()  #save finalized staged changes
+def create_posts(post: Post, db: Session=Depends(get_db)):
+    
     return {"data": new_post}  #sends this to the Post request
 
 

@@ -1,4 +1,4 @@
-#--- Database Basics ---#
+#--- With Database (PostgreSQL) ---#
 
 #run: "uvicorn app.main:app" and append: "--reload"
 
@@ -7,6 +7,10 @@ from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
+
 
 app = FastAPI()  #fastapi instance
 
@@ -17,33 +21,22 @@ class Post(BaseModel):
     title: str  #mandatory property
     content: str  #mandatorty property
     published: bool = True  #optional property
-    rating: Optional[int] = None  #fully optional field
+    # rating: Optional[int] = None  #fully optional field
+    
 
-
-my_posts = [
-    {
-        "title": "example title 1",  #my_posts[0].get("title")
-        "content": "example content 1",  #my_posts[0]["content"]
-        "id": 1
-    },
-    {
-        "title": "example title 2",
-        "content": "example content 2",
-        "id": 2 
-    }
-]
-
-
-def find_post(id):
-    for p in my_posts:
-        if p["id"] == id:
-            return p
+#--- Connecting to Database ---#
+while True:
+    try:
+        conn = psycopg2.connect(host='localhost', database='fastapi', 
+                                user='postgres', password='admin', cursor_factory=RealDictCursor)
         
-
-def find_post_index(id):
-    for i, p in enumerate(my_posts):
-        if p["id"] == id:
-            return i
+        cursor = conn.cursor()
+        print('DB conn was successful')
+        break
+    except Exception as error:
+        print('DB conn failed')
+        print('Error:', error)
+        time.sleep(2)
 
 
 #path operation/route
@@ -51,103 +44,68 @@ def find_post_index(id):
 async def root():  #function
     return {"message": "welcome to my api"}  #sends this to the Get request
 
-#it will only run the first path operation that matches
-# @app.get("/")
-# async def get_posts():
-#     return {"data": "this is your posts"}
-
-#the above get() and this post() are not the same thing
-# @app.post("/")  #decorator
-# async def root():  #function
-#     return {"message2": "welcome to my api"}
-
 
 #--- Get Posts---#
 @app.get("/posts")
 def get_posts():
-    # print(my_posts[0].get("title"))
-    # print(my_posts[0]["content"])
-    return {"data": my_posts}
-
-#hits the first one irrespective of method name
-# def root():  #function
-#     return {"message": "welcome to my api"}
+    cursor.execute(""" SELECT * FROM posts """)
+    posts = cursor.fetchall()  #retrieve multiple posts
+    # print(posts)
+    return {"data": posts}
 
 
 #--- Create Posts ---#
-# @app.post("/createposts")
-# def create_posts(payload: dict = Body(...)):  #extracting payload
-#     print(payload)
-#     return {"new_post": f"title {payload['title']} content {payload['content']}"}
-
-# @app.post("/posts")
-# def create_posts(new_post: Post):
-    # print(new_post)  #new_post receives some JSON data from the Post request Body
-    # print(new_post.published)
-    # return {"data": "new post"}
-
 #sending status code with the decorator
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_posts(new_post: Post):
-    post_dict = new_post.dict()  #new_post receives some JSON data from the Post request Body
-    post_dict['id'] = randrange(0, 1000000)  #adds a random id to post_dict
-    # print(new_post)
-    # print(post_dict)
-    my_posts.append(post_dict)
-    return {"data": post_dict}  #sends this to the Post request
+def create_posts(post: Post):
+    # cursor.execute(""" INSERT INTO posts (title, content, published)
+    #                VALUES ({new_post.title}, {new_post.content}, {new_post.published}) """)
+    #using f strings makes us vulnerable to SQL injection attack
+    cursor.execute(""" INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """, 
+                   (post.title, post.content, post.published))
+    #here we sanitize the input, more secured
+    new_post = cursor.fetchone()
+    conn.commit()  #save finalized staged changes
+    return {"data": new_post}  #sends this to the Post request
 
 
 #--- Get A Post ---#
-# @app.get("/posts/{id}")  #this "id" field is a path parameter, path params are always str
-# def get_post(id: int):  #data type validation
-    # print(id)
-    # return {"post_detail": f"here is post {id}"}
-
 @app.get("/posts/{id}")
-def get_post(id: int, response: Response):
-    post = find_post(id)
+def get_post(id: int):
+    cursor.execute(""" SELECT * FROM posts WHERE id=%s """, (str(id), ))
+    post = cursor.fetchone()
     if not post:
-        # response.status_code = 404  #write status code
-        # response.status_code = status.HTTP_404_NOT_FOUND  #use enum to find status code
-        # return {"message": f"post with id: {id} was not found"}
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} was not found")
     return {"post_detail": post}
-
-#when we try to visit "/posts/latest" but "/posts/{id}" is run, route matched by accident
-#due to such cases the order matters, be careful when using path params
-#change URL or rearrange accordingly to avoid such cases
-# @app.get("/posts/latest")
-# def get_latest_post():
-#     post = my_posts[len(my_posts)-1]
-#     return {"detail": post}
 
 
 #--- Delete A Post ---#
 #sending status code with the decorator
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int):
-    index = find_post_index(id)
-    if index == None:
+    cursor.execute(""" DELETE FROM posts WHERE id=%s RETURNING * """, 
+                   (str(id), ))
+    deleted_post = cursor.fetchone()
+    conn.commit()
+    if deleted_post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} does not exist")
-    my_posts.pop(index)
-    # return {"message": f"post with id: {id} was successfully deleted"}
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-#--- Update A Post ---#
+#--- Update A Post ---# #fix it#
 @app.put("/posts/{id}")
 def update_post(id: int, post: Post):  #validate the data from frontend that is stored in post with our Post schema
-    # print(post)   #default published and rating values from the schema
-    index = find_post_index(id)
-    if index == None:
+    cursor.execute(""" UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING * """,
+                   (post.title, post.content, post.published, str(id)))
+    updated_post = cursor.fetchone()
+    conn.commit()
+    if updated_post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} does not exist")
-    post_dict = post.dict()  #does not have id since it follows the schema
-    post_dict["id"] = id  #adds id
-    my_posts[index] = post_dict  #updates the array at that index
-    return {"data": post_dict}
+    return {"data": updated_post}
+
 
 
 #--- PostgreSQL ---#
@@ -203,15 +161,4 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-#upto 3:42:45 - https://youtu.be/0sOvCWFmrtA?si=RbXrWjC-GGEP6TrV&t=13365
+#upto 4:28:35 - https://youtu.be/0sOvCWFmrtA?si=ERG6dw09WxqCSwHt&t=16116
