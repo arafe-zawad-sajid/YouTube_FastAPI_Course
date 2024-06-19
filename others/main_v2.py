@@ -1,3 +1,5 @@
+#--- Database Basics ---#
+
 #run: "uvicorn app.main:app" and append: "--reload"
 
 from typing import Optional

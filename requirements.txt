@@ -1,6 +1,8 @@
 # check video again to see the requirements
 # pip install fastapi[all]
 # pip install psycopg2
+# pip install sqlalchemy
+
 annotated-types==0.7.0
 anyio==4.4.0
 certifi==2024.6.2

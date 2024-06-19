@@ -1,4 +1,4 @@
-#--- With ORM ---#
+#--- With Database ---#
 
 #run: "uvicorn app.main:app" and append: "--reload"
 
@@ -129,4 +129,4 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 
 
-#upto upto 4:44:10 - https://youtu.be/0sOvCWFmrtA?si=1oC2iX2LGr8eMOA9&t=17053
+#upto 4:28:35 - https://youtu.be/0sOvCWFmrtA?si=ERG6dw09WxqCSwHt&t=16116
