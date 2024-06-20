@@ -8,6 +8,8 @@ v4 - response model
 
 v5 - user registration
 
-v6 - using routers [current]
+v6 - using routers
+
+v7 - authentication
 
 

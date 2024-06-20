@@ -3,6 +3,7 @@
 #pip install psycopg2
 #pip install sqlalchemy
 #pip install passlib[bcrypt]
+#pip install python-jose[cryptography] 
 # fastapi==0.68.0
 # psycopg2==2.9.1
 # sqlalchemy==1.4.23
