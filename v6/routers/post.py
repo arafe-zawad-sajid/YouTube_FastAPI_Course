@@ -1,39 +1,26 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
-
-#--- User Registration ---#
-#
-
-
-
 from typing import List
-from fastapi import FastAPI, Response, status, HTTPException, Depends
-from . import models, schemas
-from .database import engine, get_db
+from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
-
-models.Base.metadata.create_all(bind=engine)  #creates db tables
-
-app = FastAPI()  #fastapi instance
+from ..database import get_db
+from .. import models, schemas  #two dots mean going up a dir
 
 
-#path operation/route
-@app.get("/")  #decorator
-async def root():  #function
-    return {"message": "welcome to my api"}  #sends this to the Get request
-
+router = APIRouter(
+    prefix="/posts",  #prefix basically appends "/posts" to any route url
+    tags=['Posts']  #tags basically improves readability of our swagger ui doc
+    )  
 
 #--- Get Posts---#
-@app.get("/posts", response_model=List[schemas.Post])  #response with a list of schemas.Post models
+@router.get("/", response_model=List[schemas.Post])  #response with a list of schemas.Post models
 def get_posts(db: Session=Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts  #instead of sending dict we return post 
                   #FastAPI can automatically serialize it and convert it to JSON
 
-
 #--- Create Posts ---#
 #sending status code with the decorator
 #we define the reponse model within the decorator
-@app.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session=Depends(get_db)):
     # new_post = models.Post(title=post.title, content=post.content,
     #                        published=post.published)
@@ -43,9 +30,8 @@ def create_posts(post: schemas.PostCreate, db: Session=Depends(get_db)):
     db.refresh(new_post)  #retrieve the new post we created in db
     return new_post  #sends this to the Post request
 
-
 #--- Get A Post ---#
-@app.get("/posts/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.Post)  #APIRouter prefix appends "/posts" with "/id"
 def get_post(id: int, db: Session=Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     # print(post)
@@ -54,10 +40,9 @@ def get_post(id: int, db: Session=Depends(get_db)):
                             detail=f"post with id: {id} was not found")
     return post
 
-
 #--- Delete A Post ---#
 #sending status code with the decorator
-@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session=Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     # print(type(post))  #<class 'sqlalchemy.orm.query.Query'>
@@ -68,9 +53,8 @@ def delete_post(id: int, db: Session=Depends(get_db)):
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-
 #--- Update A Post ---#
-@app.put("/posts/{id}", response_model=schemas.Post)
+@router.put("/{id}", response_model=schemas.Post)
 def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):  #validate the data from frontend that is stored in post with our Post schema
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None:
@@ -79,7 +63,3 @@ def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):
     post_query.update(post.dict(), synchronize_session=False)
     db.commit()
     return post_query.first()
-
-
-
-#upto 5:53:15 - https://youtu.be/0sOvCWFmrtA?si=fpHSisXrqRRH2xYK&t=21197

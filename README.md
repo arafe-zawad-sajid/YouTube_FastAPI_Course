@@ -6,6 +6,8 @@ v3 - with orm (SQL Alchemy)
 
 v4 - response model
 
-v5 - user registration [current]
+v5 - user registration
+
+v6 - using routers [current]
 
 

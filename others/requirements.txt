@@ -1,5 +1,0 @@
-#check video again to see the requirements
-
-# pip install fastapi[all]==0.68.0
-# pip install psycopg2==2.9.1
-# pip install sqlalchemy==1.4.23
