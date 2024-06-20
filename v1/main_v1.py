@@ -1,10 +1,12 @@
+#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+
 #--- Without Database ---#
 
-#run: "uvicorn app.main:app" and append: "--reload"
+
 
 from typing import Optional
 from fastapi import FastAPI, Response, status, HTTPException
-from fastapi.params import Body
+# from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
 
@@ -151,4 +153,5 @@ def update_post(id: int, post: Post):  #validate the data from frontend that is 
 
 
 
+#run: "uvicorn app.main:app" and append: "--reload"
 #timestamp: https://youtu.be/0sOvCWFmrtA?si=GKaTt_O5GnXdvX6F&t=8659

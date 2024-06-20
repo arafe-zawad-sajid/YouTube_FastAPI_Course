@@ -15,6 +15,7 @@ Base = declarative_base()  #all models that we'll define to create our tables wi
 
 #dependency: the func connects/gets a session to db
 #we can keep calling this func every time we get a request to any of our API endpoints
+#creates a session to our db for every request to that specific API endpoint
 def get_db():
     db = SessionLocal()  #session obj resposible for talking with db
     try:
