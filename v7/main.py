@@ -2,7 +2,7 @@
 
 #--- Authentication ---#
 #2 main ways: session based and JWT token based
-#we store sth on our backend server/API to track if a user is logged in
+#session based: we store sth on our backend server/API to track if a user is logged in
 # 
 #How JWT works:
 #JWT is stateless, there's nothing on our backend/API/db, we store it on frontend
