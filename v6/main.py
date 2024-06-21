@@ -31,4 +31,3 @@ async def root():  #function
 
 
 
-#upto 6:32:50 - https://youtu.be/0sOvCWFmrtA?si=ha6EwjLptVJ29skl&t=23570

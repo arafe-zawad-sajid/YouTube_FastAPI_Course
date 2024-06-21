@@ -163,4 +163,3 @@ def update_post(id: int, post: schemas.Post, db: Session=Depends(get_db)):  #val
 
 
 
-#upto 5:34:14 - https://youtu.be/0sOvCWFmrtA?si=KC4MEdhPphJdSTt8&t=20054

@@ -84,5 +84,3 @@ def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):
     return post_query.first()
 
 
-
-#upto 5:50:30 - https://youtu.be/0sOvCWFmrtA?si=7THH8MXU39L2HqsA&t=21030

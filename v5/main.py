@@ -106,4 +106,3 @@ def get_user(id: int, db: Session=Depends(get_db)):  #db in the function
 
 
 
-#upto 6:18:31 - https://youtu.be/0sOvCWFmrtA?si=gTCo7YnQHA-2DH2G&t=22711

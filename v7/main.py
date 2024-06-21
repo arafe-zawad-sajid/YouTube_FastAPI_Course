@@ -67,7 +67,3 @@ app.include_router(auth.router)
 @app.get("/")  #decorator
 async def root():  #function
     return {"message": "welcome to my api"}  #sends this to the Get request
-
-
-
-#upto 7:10:20 - https://youtu.be/0sOvCWFmrtA?si=zmAZM3vLYE3m6RS3&t=25820
