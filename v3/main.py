@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v3.main:app" and append: "--reload" for auto reload
 
 #--- With ORM (SQLAlchemy) ---#
 #one way to interract with the db is to use the def postgresql driver (psycopg2) 

@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v5.main:app" and append: "--reload" for auto reload
 
 #--- User Registration ---#
 #

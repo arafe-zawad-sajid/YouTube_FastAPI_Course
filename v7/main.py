@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v7.main:app" and append: "--reload" for auto reload
 
 #--- Authentication ---#
 #2 main ways: session based and JWT token based
@@ -67,3 +67,5 @@ app.include_router(auth.router)
 @app.get("/")  #decorator
 async def root():  #function
     return {"message": "welcome to my api"}  #sends this to the Get request
+
+

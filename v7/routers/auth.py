@@ -16,7 +16,7 @@ def login(user_credentials: OAuth2PasswordRequestForm=Depends(), db: Session=Dep
     
     #"user_credentials" is going to contain the fields username (instead of email) and password (unchanged)
     #'user_credentials' has no field called email, it's username
-    #instead of sending raw data in Body, we will send form data now
+    #in Postman, instead of sending raw JSON in Body, we will send form-data now
     user = db.query(models.User).filter(models.User.email == user_credentials.username).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

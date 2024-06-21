@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v4.main:app" and append: "--reload" for auto reload
 
 #--- Response Model ---#
 #just like we can define what a request should look like, we can define what a reponse should look like

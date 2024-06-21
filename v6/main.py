@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v6.main:app" and append: "--reload" for auto reload
 
 #--- Using Routers ---#
 #as we keep adding more path operations "main.py" file gets messier, we need to clean it up

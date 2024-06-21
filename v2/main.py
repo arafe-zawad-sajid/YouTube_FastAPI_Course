@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v2.main:app" and append: "--reload" for auto reload
 
 #--- With Database (PostgreSQL) ---#
 # SELECT * FROM products;  #select all columns from products table

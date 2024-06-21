@@ -1,4 +1,4 @@
-#run: "uvicorn app.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v1.main:app" and append: "--reload" for auto reload
 
 #--- Without Database ---#
 
