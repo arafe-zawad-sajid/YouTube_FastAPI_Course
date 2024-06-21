@@ -17,6 +17,6 @@ v6 - using routers
 > upto 6:32:50 - https://youtu.be/0sOvCWFmrtA?si=ha6EwjLptVJ29skl&t=23570
 
 v7 - authentication 
-> upto 7:13:25 - https://youtu.be/0sOvCWFmrtA?si=6IjMYYFZJ9dsrYnu&t=26009
+> upto 7:50:30 - https://youtu.be/0sOvCWFmrtA?si=5MARfpBJwlMyXDRM&t=28229
 
 

@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
+
 
 #--- Post: Request Model ---#
 #pydantic model/schema
@@ -42,4 +44,21 @@ class UserOut(BaseModel):
 
     class Config:  #Config converts the orm model to pydantic model
         orm_mode=True
+
+
+
+#--- Token: Request Model ---#
+#we define a schema for the token because the user has to provide the access token
+#if we expect them to send sth it's best to setup a schema
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+#we setup a schema for the token data that is embedded in our access token
+#this will ensure that all the data we pass in the token is actually there
+class TokenData(BaseModel):
+    # id: Optional[str] = None  #CHECK THIS AGAIN
+    id: Optional[int] = None  #we shouldn't make this optional
+
+
 
