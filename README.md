@@ -19,4 +19,6 @@ v6 - using routers
 v7 - authentication 
 > upto 7:50:30 - https://youtu.be/0sOvCWFmrtA?si=5MARfpBJwlMyXDRM&t=28229
 
+v8 - database relationships
+> upto 8:33:38 - https://youtu.be/0sOvCWFmrtA?si=G8Hif-oK9E504EJU&t=30818
 
