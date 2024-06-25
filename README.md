@@ -19,6 +19,13 @@ v6 - using routers
 v7 - authentication 
 > upto 7:50:30 - https://youtu.be/0sOvCWFmrtA?si=5MARfpBJwlMyXDRM&t=28229
 
-v8 - database relationships
+v8 - database relationships, query parameters
 > upto 8:33:38 - https://youtu.be/0sOvCWFmrtA?si=G8Hif-oK9E504EJU&t=30818
+
+v9 - environment variables
+> upto 9:07:40 - https://youtu.be/0sOvCWFmrtA?si=W0TaM91E05b497c2&t=32860
+
+v10 - voting system
+> upto 9:34:10 - https://youtu.be/0sOvCWFmrtA?si=8I3FeAUKk2Go5ViO&t=34454
+
 

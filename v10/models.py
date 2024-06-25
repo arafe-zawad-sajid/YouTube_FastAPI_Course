@@ -41,3 +41,14 @@ class User(Base):  #extending database.Base is a requirement for any orm model
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), 
                         server_default=text('now()'), nullable=False)
+
+
+#--- Voting System ---#
+class Vote(Base):
+    __tablename__ = "votes"
+    post_id = Column(Integer,
+                     ForeignKey("posts.id", ondelete="CASCADE"),
+                     primary_key=True)
+    user_id = Column(Integer, 
+                     ForeignKey("users.id", ondelete="CASCADE"), 
+                     primary_key=True)

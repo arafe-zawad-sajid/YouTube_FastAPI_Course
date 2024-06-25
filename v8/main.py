@@ -28,8 +28,19 @@
 #We also update schemas.Post but "create_post()" endpoint since owner_id was set as nullable=False
 #We are not going to pass user_id to our schema, rather we'll retrieve it from the auth status 
 #it's like when we create a post on twitter, twitter already knows the user_id
+#when we retrieve the posts we want to embed the user's id 
+#what post beling to what user and their specific username
+#we setup a relationship in "models.py", it's not a db foreign key
+#it tells SQL Alchemy to automatically fetch some piece of info based off of the relationship
 # 
-
+#--- Query Parameters ---#
+#domain-name/end-point/?query-parameter
+#whenever you search for sth on a website you'll see that question mark
+#everything to the right of that question mark is the query parameter
+#it's an optional key-value pair, it allows us to filter the results of a request
+#we use this for a lot of operations that are necessary in an API, like pagination
+#it basically talks to the API and tells it to get all restaurants and filter only Miami
+#   
 
 from fastapi import FastAPI
 from . import models  #one dot means current dir
