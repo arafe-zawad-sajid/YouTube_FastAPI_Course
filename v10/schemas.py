@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
+from pydantic.types import conint
 
 #--- User: Request Model ---#
 class UserCreate(BaseModel):  #creating a user
@@ -19,6 +20,16 @@ class UserOut(BaseModel):
 
     class Config:  #Config converts the orm model to pydantic model
         orm_mode=True
+
+#--- Vote: Request Model ---#
+# 
+class Vote(BaseModel):
+    post_id: int
+    # dir: conint(le=1)
+    dir: conint(ge=0, le=1)  #0<dir<1
+                             #we could also use bool here instead
+                             #we could also use Literal[0, 1]
+
 
 #--- Post: Request Model ---#
 #pydantic model/schema

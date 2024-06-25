@@ -13,12 +13,13 @@
 #one between posts and votes, another between users and votes 
 #we make sure if a post or a user is deleted, it should cascade delete the related vote entries
 #the foreign keys make sure we can't make an entry with non-existent user_id or post_id
+#we need to setup the vote route in "routers\vote.py"
 #  
 
 from fastapi import FastAPI
 from . import models  #one dot means current dir
 from .database import engine
-from .routers import post, user, auth
+from .routers import post, user, auth, vote
 from .config import settings
 
 
@@ -30,6 +31,7 @@ app.include_router(post.router)  #importing the router obj from post.py
 app.include_router(user.router)  #the request will go into user.py and look for the route
                                  #if it finds a match it will respond like it normally does
 app.include_router(auth.router)
+app.include_router(vote.router)
 
 #path operation/route
 @app.get("/")  #decorator
