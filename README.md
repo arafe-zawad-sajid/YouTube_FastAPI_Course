@@ -25,7 +25,7 @@ v8 - database relationships, query parameters
 v9 - environment variables
 > upto 9:07:40 - https://youtu.be/0sOvCWFmrtA?si=W0TaM91E05b497c2&t=32860
 
-v10 - voting system
-> upto 9:47:25 - https://youtu.be/0sOvCWFmrtA?si=GOLliDp_KsAt8BW1&t=35247
+v10 - voting system, SQL JOIN
+> upto 10:03:10 - https://youtu.be/0sOvCWFmrtA?si=u8xOz-06cG2jKH0E&t=36192
 
 
