@@ -29,8 +29,9 @@
 #It compares vals from posts.owner_id col with vals from users.id col in the users table
 #If these vals are equal, it creates a new row that contains cols of both tables and adds this new row to the result set
 #If the vals are not equal, it still creates a new row that contains cols from both tables and adds it to the result set, 
-#but it fills the cols of the right table (users) with null  
-#since our posts table must have an owner_id so we won't run into such a situation 
+#but it fills the cols of the right table (users) with null 
+#If there was a post without an owner_id the user info would be shown as null
+#Since our posts table must have an owner_id so we won't run into such a situation 
 
 # SELECT title, content, email FROM posts LEFT JOIN users ON users.id=posts.owner_id
 
@@ -53,10 +54,9 @@
 
 #We want to get the no. of posts by each user 
 
-#--- SEE AGAIN ---#
 # SELECT users.id, COUNT(*) FROM posts LEFT JOIN users ON posts.owner_id=users.id GROUP BY users.id
 #We'll GROUP the entries from our JOIN based on users.id, 
-#once we group them we can't count all of the entries per user
+#once we group them we can count all of the entries per user
 #One user made no posts so we don't see it
 
 # SELECT * FROM posts RIGHT JOIN users ON posts.owner_id=users.id
@@ -65,26 +65,38 @@
 # SELECT users.id, COUNT(*) FROM posts RIGHT JOIN users ON posts.owner_id=users.id GROUP BY users.id
 #It seems to have worked but the count is 1 for the user with 0 posts, it counts the null entries
 
-#Instead of COUNT(*) we should pass in a col (any posts col) that we wanna count  
+#Instead of COUNT(*) we should pass in a col (any posts col) that we wanna count, to avoid counting null entries  
+#If a user didn't make a post then posts.id would be null
 # SELECT users.id, COUNT(posts.id) FROM posts RIGHT JOIN users ON posts.owner_id=users.id GROUP BY users.id
-#This works
+#This works perfectly
 
-# SELECT users.id, COUNT(posts.id) AS user_post_count FROM posts LEFT JOIN users ON posts.owner_id=users.id GROUP BY users.id
+# SELECT users.id, users.email, COUNT(posts.id) AS user_post_count FROM posts RIGHT JOIN users ON posts.owner_id=users.id GROUP BY users.id
 #just renaming the col
 
 #Now we work with our posts and votes tables, we'll JOIN them
 # SELECT * FROM posts LEFT JOIN votes ON posts.id = votes.post_id
+#We have posts that are being repeated because we print a row everytime the posts.id matches votes.post_id
+#We have multiple votes for a post, that's why the post entries are being repeated 
 
 # SELECT * FROM posts RIGHT JOIN votes ON posts.id = votes.post_id
+#It's gonna do the exact opposite
+#Some posts will be shown multiple times since multiple users voted on them
+#It's going to show us all of the votes and their corresponding posts
 
-# SELECT posts.id, COUNT(*) FROM posts LEFT JOIN votes ON posts.id = votes.post_id
-
-
+#we want to count the total no. of votes for each posts
 # SELECT posts.id, COUNT(*) FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id
+#Like before, it's counting the null entries as 1, we don't want that 
 
-# 
 
+# SELECT posts.id, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id
+#We get the post_id and no. of votes
 
+# SELECT posts.*, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id
+#This is the exact query that we need, we have the post info and the no. of votes
+
+#To get the no. of votes for an individual post we just add the WHERE condition
+# SELECT posts.*, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id WHERE posts.id=11 GROUP BY posts.id
+#    
 
 
 from fastapi import FastAPI
