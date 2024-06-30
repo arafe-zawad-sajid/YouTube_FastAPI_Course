@@ -55,6 +55,14 @@ class Post(PostBase):  #Post extends/inherits from PostBase
     class Config:
         orm_mode=True
 
+#CHECK AGAIN
+class PostOut(BaseModel):
+    Post: Post
+    votes: int
+
+    class Config:
+        orm_mode=True
+
 #--- Token: Request Model ---#
 #we define a schema for the token because the user has to provide the access token
 #if we expect them to send sth it's best to setup a schema

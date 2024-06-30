@@ -3,6 +3,7 @@ from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import models, schemas, oauth2  #two dots mean going up a dir
+from sqlalchemy import func
 
 
 router = APIRouter(
@@ -21,13 +22,20 @@ router = APIRouter(
 #We also want to setup a search func based on keywords in title
 #To use space in the URL, we use "%20" in between the words
 #     
-@router.get("/", response_model=List[schemas.Post])  #response with a list of schemas.Post models
+@router.get("/", response_model=List[schemas.PostOut])  #response with a list of schemas.Post models
 def get_posts(db: Session=Depends(get_db), current_user: int=Depends(oauth2.get_current_user),
               limit: int=10,  #def limit is 10 posts
               skip: int=0,
               search: Optional[str]=""):  #an optional search param
     #search the post title to see if the search keyword is anywhere in the title, it doesn't have to match completely
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    # posts = db.query(models.Post).filter(
+    #     models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    #LEFT OUTER JOIN
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(
+        models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    #if we use schemas.Post it will give us a validation error
+    # print(results)
     # print(current_user.password)
     return posts  #instead of sending dict we return post 
                   #FastAPI can automatically serialize it and convert it to JSON
@@ -60,11 +68,13 @@ def create_posts(post: schemas.PostCreate, db: Session=Depends(get_db),
 #--- Get A Post ---#
 #Since we're building a social media app we will retrieve posts from any users, public
 # 
-@router.get("/{id}", response_model=schemas.Post)  #APIRouter prefix appends "/posts" with "/id"
+@router.get("/{id}", response_model=schemas.PostOut)  #APIRouter prefix appends "/posts" with "/id"
 def get_post(id: int, db: Session=Depends(get_db), 
              current_user: int=Depends(oauth2.get_current_user)):  #leaving it as int still works 
                                                                    #as python doesn't enforce data types
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(
+        models.Post.id == id).first()
     # print(post)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

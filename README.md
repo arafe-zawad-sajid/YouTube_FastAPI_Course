@@ -26,6 +26,6 @@ v9 - environment variables
 > upto 9:07:40 - https://youtu.be/0sOvCWFmrtA?si=W0TaM91E05b497c2&t=32860
 
 v10 - voting system, SQL JOIN
-> upto 10:15:10 - https://youtu.be/0sOvCWFmrtA?si=B9QrC6UtsivUW8jO&t=36915
+> upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817
 
 
