@@ -24,14 +24,16 @@
 #We can JOIN two tables together with a single query, that's more efficient than multiple queries 
 #link: https://www.postgresqltutorial.com/ 
 
-# SELECT * FROM posts LEFT JOIN users ON posts.owner_id = users.id
+# SELECT * FROM posts LEFT JOIN users ON posts.owner_id = users.id 
 #The left join starts selecting data from the left table (posts)
 #It compares vals from posts.owner_id col with vals from users.id col in the users table
 #If these vals are equal, it creates a new row that contains cols of both tables and adds this new row to the result set
 #If the vals are not equal, it still creates a new row that contains cols from both tables and adds it to the result set, 
 #but it fills the cols of the right table (users) with null 
-#If there was a post without an owner_id the user info would be shown as null
-#Since our posts table must have an owner_id so we won't run into such a situation 
+#Lists out each post and it's corresponding owner, 1 post must have 1 owner
+#The left table (posts) has more precedence here, if a user made no posts then it doesn't list out the user info
+#If there was a post without an owner_id the user info would be shown as null,
+#since our posts table must have an owner_id so we won't run into such a situation 
 
 # SELECT title, content, email FROM posts LEFT JOIN users ON users.id=posts.owner_id
 
@@ -44,23 +46,19 @@
 # SELECT posts.*, email FROM posts LEFT JOIN users ON users.id=posts.owner_id  
 #Grabs all the cols from the posts table and email col from users table
 
-#We want the email info for every single posts
-
 # SELECT * FROM posts RIGHT JOIN users ON posts.owner_id = users.id
 #RIGHT JOIN is reverse of LEFT JOIN, direction is opposite
+#Lists out each user and their corresponding posts, 1 user can make 0-n posts
+#The right table (users) has more precedence here, if a user made no posts still it lists out the user info but the post infos are null
 
-#In a RIGHT JOIN we'll get instances where something exists in the right table but doesn't exist in the left table
-#In a LEFT JOIN we'll get instances where something exists in the left table but doesn't exist in the right table
+#In a RIGHT JOIN we'll get instances where something exists in the right table (users) but doesn't exist in the left table (posts)
+#In a LEFT JOIN we'll get instances where something exists in the left table (posts) but doesn't exist in the right table (users)
 
 #We want to get the no. of posts by each user 
 
 # SELECT users.id, COUNT(*) FROM posts LEFT JOIN users ON posts.owner_id=users.id GROUP BY users.id
-#We'll GROUP the entries from our JOIN based on users.id, 
-#once we group them we can count all of the entries per user
+#We'll GROUP the entries from our JOIN based on users.id, once we group them we can count all of the entries per user
 #One user made no posts so we don't see it
-
-# SELECT * FROM posts RIGHT JOIN users ON posts.owner_id=users.id
-#lists every single user even if the user made no posts
 
 # SELECT users.id, COUNT(*) FROM posts RIGHT JOIN users ON posts.owner_id=users.id GROUP BY users.id
 #It seems to have worked but the count is 1 for the user with 0 posts, it counts the null entries
@@ -86,7 +84,6 @@
 #we want to count the total no. of votes for each posts
 # SELECT posts.id, COUNT(*) FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id
 #Like before, it's counting the null entries as 1, we don't want that 
-
 
 # SELECT posts.id, COUNT(votes.post_id) as votes FROM posts LEFT JOIN votes ON posts.id = votes.post_id GROUP BY posts.id
 #We get the post_id and no. of votes
