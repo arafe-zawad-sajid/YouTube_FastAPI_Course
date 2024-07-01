@@ -29,7 +29,7 @@ v10 - voting system, SQL JOIN
 > upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817
 
 v11 - database migration (Alembic)
-> upto 10:37:20 - https://youtu.be/0sOvCWFmrtA?si=wYZ-rOnMAGm9-K4j&t=38244
+> upto 11:14:30 - https://youtu.be/0sOvCWFmrtA?si=LwrMhMF4FRefTTKy&t=40475
 
 
 

@@ -17,10 +17,19 @@ down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-
+#Runs the command for making the changes 
+#We put all of the logic for creating "posts" table
+#  
 def upgrade() -> None:
+    op.create_table("posts", 
+                    sa.Column("id", sa.Integer(), nullable=True, primary_key=True),
+                    sa.Column("title", sa.String(), nullable=False)
+                    )
     pass
 
-
+#To handle the rollback
+#  
+# 
 def downgrade() -> None:
+    op.drop_table("posts")
     pass

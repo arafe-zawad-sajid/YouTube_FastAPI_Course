@@ -41,7 +41,7 @@ class User(Base):  #extending database.Base is a requirement for any orm model
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), 
                         server_default=text('now()'), nullable=False)
-
+    phone_number = Column(String)
 
 #--- Voting System ---#
 class Vote(Base):
