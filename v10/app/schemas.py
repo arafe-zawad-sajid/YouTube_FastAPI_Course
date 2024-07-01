@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
 from pydantic.types import conint
+from .models import Post
 
 #--- User: Request Model ---#
 class UserCreate(BaseModel):  #creating a user

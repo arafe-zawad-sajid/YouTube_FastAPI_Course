@@ -26,21 +26,23 @@ def vote(vote: schemas.Vote, db: Session=Depends(database.get_db),
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id {vote.post_id} does not exist")
 
-    vote_query = db.query(models.Vote).filter(models.Vote.post_id == vote.post_id,
-                                     models.Vote.user_id == current_user.id)
+    vote_query = db.query(models.Vote).filter(
+        models.Vote.post_id == vote.post_id, models.Vote.user_id == current_user.id)
     found_vote = vote_query.first()
-    if vote.dir == 1:
-        if found_vote:
+    if vote.dir == 1:  #user wants to like a post
+        if found_vote:  #but user already liked that post
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail=f"user {current_user.id} has already voted on post {vote.post_id}")
+        #user will like this post now
         new_vote = models.Vote(post_id=vote.post_id, user_id=current_user.id)
         db.add(new_vote)
         db.commit()
         return {"message": "successfully added vote"}
-    else:
-        if not found_vote:
+    else:  #user wants to remove like
+        if not found_vote:  #but user has not liked this post
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="vote does not exist")
-    vote_query.delete(synchronize_session=False)
-    db.commit()
-    return {"message": "successfully deleted vote"}
+        #user will delete this like now
+        vote_query.delete(synchronize_session=False)
+        db.commit()
+        return {"message": "successfully deleted vote"}

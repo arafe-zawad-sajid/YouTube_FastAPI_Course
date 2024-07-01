@@ -5,6 +5,7 @@
 #pip install sqlalchemy
 #pip install passlib[bcrypt]
 #pip install python-jose[cryptography] 
+#pip install alembic
 
 annotated-types==0.7.0
 anyio==4.4.0

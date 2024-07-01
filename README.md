@@ -28,4 +28,9 @@ v9 - environment variables
 v10 - voting system, SQL JOIN
 > upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817
 
+v11 - database migration (Alembic)
+> upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817
+
+
+
 

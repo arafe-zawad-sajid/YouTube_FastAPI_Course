@@ -22,7 +22,7 @@ router = APIRouter(
 #We also want to setup a search func based on keywords in title
 #To use space in the URL, we use "%20" in between the words
 #     
-@router.get("/", response_model=List[schemas.PostOut])  #response with a list of schemas.Post models
+@router.get("/", response_model=List[schemas.PostOut])  #if we use schemas.Post it will give us validation error
 def get_posts(db: Session=Depends(get_db), current_user: int=Depends(oauth2.get_current_user),
               limit: int=10,  #def limit is 10 posts
               skip: int=0,
@@ -34,8 +34,6 @@ def get_posts(db: Session=Depends(get_db), current_user: int=Depends(oauth2.get_
     posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(
         models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    #if we use schemas.Post it will give us a validation error
-    # print(results)
     # print(current_user.password)
     return posts  #instead of sending dict we return post 
                   #FastAPI can automatically serialize it and convert it to JSON
