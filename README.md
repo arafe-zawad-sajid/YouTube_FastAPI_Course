@@ -28,9 +28,10 @@ v9 - environment variables
 v10 - voting system, SQL JOIN
 > upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817
 
-v11 - database migration (Alembic)
-> upto 11:14:30 - https://youtu.be/0sOvCWFmrtA?si=LwrMhMF4FRefTTKy&t=40475
+v11 - database migration (Alembic), CORS policy, GIT 
+> upto 11:34:30 - https://youtu.be/0sOvCWFmrtA?si=Meit2IEtYJ7zIAgM&t=41686
 
-
+v12 - application deployment (Heroku)
+> upto 11:50:00 - https://youtu.be/0sOvCWFmrtA?si=Ezn5EkJjlN4zoiZc&t=42600
 
 
