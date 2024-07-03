@@ -34,16 +34,40 @@
 #Now, we have to add those env vars through the cmd line or the dashboard 
 #We also need a postgres db file, heroku provides us with a free postgres instance 
 # heroku addons: create heroku-postgresql: hobby-dev
-#If we refresh our dashboard we can see a new heroku instance, in settings we can see our db credentials
+#If we refresh our dashboard we can see a new heroku instance, in its settings we can see our db credentials
 #We can see the ip address in which the db lives on, heroku sets the db name which can't be changed
 #we can see the username, port, password. They also provide us the whole postgres URL  
-#Under settings we have Config Vars where we provide env vars to our heroku instance
+#Under settings we have Config Vars option where we provide env vars to our heroku instance
 #Heroku calls our instance dynos 
 #Heroku automatically added an env var called db URL. We can directly put it in "database.py" file
-#But that would require us to change our code, so instead of using the def env  
-#we break down the URL into multiple env vars in heroku dyno settings 
-#the env vars bame     
-#   
+#But that would require us to change our code, so instead of using the default env var  
+#we break down the URL into multiple env vars in heroku dyno settings as we did for orm 
+#After setting up the env vars we restart heroku dyno
+# heroku ps --help
+# heroku ps restart
+# heroku logs -t
+#From logs we can see that we got a port assigned by heroku, this is why we provide the port variable
+#However we don't need this port to access the app URL
+# heroku apps: info fastapi-sajid
+#we can find the Web URL for our app from here
+#If we try to login through the documentation or postman, we'll get internal server error
+#From logs we can see that we get some kind of SQL error, that's because the db is empty
+#We can access our heroku postgres instance using pgAdmin
+# open pgAdmin > create server > setup the connection   
+#Now if we go into databases we'll see a lot of them because heroku provides one instance of db for free for multiple users
+#The colored db is the one that we've access to
+#We'll use alembic to create the tables since we've all our revisions setup
+#In our dev env we used alembic to manage our db schema, alembic we responsible for creating the tables
+# alembic upgrade head
+#In our prod env we'll just run this cmd on our heroku instance
+#Since our alembic folder is in git, heroku has access to it
+#So when we run alembic, it can track all changes in our prod server as well
+#But we never run alembic revision on our prod server, 
+#we only run that on our dev server when we're staging out these changes
+#In our prod server, when we want to stage our those changes we just do git push
+#and push out the code changes and alembic revisions to git and subsequently our prod server
+#Then we just run an alembic upgrade               
+# 
 
 from fastapi import FastAPI
 from . import models  #one dot means current dir

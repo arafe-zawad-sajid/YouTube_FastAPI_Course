@@ -32,6 +32,6 @@ v11 - database migration (Alembic), CORS policy, GIT
 > upto 11:34:30 - https://youtu.be/0sOvCWFmrtA?si=Meit2IEtYJ7zIAgM&t=41686
 
 v12 - application deployment (Heroku)
-> upto 11:50:00 - https://youtu.be/0sOvCWFmrtA?si=Ezn5EkJjlN4zoiZc&t=42600
+> upto 12:00:00 - https://youtu.be/0sOvCWFmrtA?si=NuqsPRAmfh4TeFuN&t=43226
 
 
