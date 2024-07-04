@@ -60,14 +60,38 @@
 #In our dev env we used alembic to manage our db schema, alembic we responsible for creating the tables
 # alembic upgrade head
 #In our prod env we'll just run this cmd on our heroku instance
-#Since our alembic folder is in git, heroku has access to it
+#Since our alembic folder is in git, heroku instance has access to it
 #So when we run alembic, it can track all changes in our prod server as well
 #But we never run alembic revision on our prod server, 
 #we only run that on our dev server when we're staging out these changes
 #In our prod server, when we want to stage our those changes we just do git push
 #and push out the code changes and alembic revisions to git and subsequently our prod server
-#Then we just run an alembic upgrade               
-# 
+#Then we just run an alembic upgrade in our heroku instance, we don't add another line in Procfile though
+# heroku run "alembic upgrade head"
+#From logs we see that it has added in all the other incremental steps which can be later used to rollback
+# heroku ps: restart
+#Now we can see that everything is working, we've successfully deployed our app
+#When we make changes to our code, we've to push out the changes to github and heroku
+# git add --all
+# git commit -m "new commit" 
+# git push origin main
+# git push heroku main
+#When we make changes to our db, we've to create a new revision in alembic and push out the changes on heroku
+# heroku run "alembic upgrade head"
+#
+#--- Application Deployment (Ubuntu Server) ---#
+#We can host our ubuntu server on any major cloud providers like AWS, Azure, etc.
+#We can also run it on our local machine with a virtual box, even on a raspberry pi
+#The steps are going to be identical as long as we run it on an ubuntu server
+#  
+#
+#
+#
+#
+#
+#
+#
+#            
 
 from fastapi import FastAPI
 from . import models  #one dot means current dir

@@ -91,40 +91,6 @@
 #Finally we need to do a git push
 # git push -u origin main  
 #A popup asks us to sign in and authorize
-#  
-#--- Application Deployment (Heroku) ---#
-#This is the first of two deployment methods we're gonna learn in this course
-#We're gonna deploy the app to a platform called Heroku so we need an account 
-#It made it very easy to deploy the app and push out changes to the app
-#After we create a Heroku account, we need to setup git which we've already done
-#Now we setup Heroku (CLI) itself 
-# heroku create fastapi-sajid
-# git remote
-#now we have two remotes, origin and heroku, the latter was added by heroku
-# git push heroku main
-#It'll push our code to heroku platform and then it'll create an instance for our app
-#After it's done it'll give us a URL of our app in the log which we open up in the browser
-#It'll fail because heroku doesn't know how to start up our app, it just knows it's a python app
-#In our dev env we ran the app using uvicorn
-# uvicorn app.main:app
-#We actually have to create a Procfile file in the root dir that tells heroku what commands to run  
-#Now we have to push out these changes to git
-# git add -all
-# git commit -m "added Procfile" 
-# git push origin main
-#Now we push out these changes to heroku to run our app
-# git push heroku main
-#Go to the heroku URL and refresh, but there are still issues, let's check the logs
-# heroku logs -t
-#From logs we can see that there are some issues with settings (the pydantic model for retrieving our env vars) 
-#It's saying that there are a couple of validation errors for our settings model
-#It's saying we don't have a db host name, db port, other infos.
-#That's because, in dev we use our ".env" file to provide all our env vars into that settings model
-#we specified that in Config where we set ".env" as our env_file
-#In git, we didn't push our ".env" file, we excluded that in ".gitignore" file
-#Now, we have to add those env vars through the cmd line or the dashboard 
-#We also need a postgres db file, heroku provides us with a free postgres instance 
-# heroku addons: create heroku-postgresql: hobby-dev
 #      
 
 from fastapi import FastAPI
