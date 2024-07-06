@@ -1,5 +1,5 @@
 # check video again to see the requirements
-# check github to find the versions
+# check github repo to find the versions
 #pip install fastapi[all]
 #pip install psycopg2
 #pip install sqlalchemy
