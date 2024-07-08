@@ -1,3 +1,13 @@
+1. check video again to see the requirements
+2. check github repo to find the versions
+3. run pip commands manually:
+> pip install fastapi[all]
+> pip install psycopg2
+pip install sqlalchemy
+pip install passlib[bcrypt]
+pip install python-jose[cryptography] 
+pip install alembic
+
 v1 - without database (just list)
 > upto 2:24:15 - https://youtu.be/0sOvCWFmrtA?si=GKaTt_O5GnXdvX6F&t=8659
 
@@ -31,7 +41,9 @@ v10 - voting system, SQL JOIN
 v11 - database migration (Alembic), CORS policy, GIT 
 > upto 11:34:30 - https://youtu.be/0sOvCWFmrtA?si=Meit2IEtYJ7zIAgM&t=41686
 
-v12 - application deployment (Heroku, Ubuntu Server)
+v12 - application deployment (Heroku)
 > upto 12:00:00 - https://youtu.be/0sOvCWFmrtA?si=NuqsPRAmfh4TeFuN&t=43226
 
+v13 - application deployment (Ubuntu Server)
+> upto 12:00:00 - https://youtu.be/0sOvCWFmrtA?si=NuqsPRAmfh4TeFuN&t=43226
 
