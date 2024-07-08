@@ -6,24 +6,27 @@
 #The steps are going to be identical as long as we run it on an ubuntu server
 #Select get started with a droplet, select ubuntu 20.04 (LTS) x64, basic, regular intel ssd
 #Select closest data center, others default, authentication = password, hostname = ubuntu.fastapi
-#Then we'll be given a public ip that we can use to connect to our VM   
-#In windows, open terminal/cmd/vs code terminal, we use the ssh protocol
+#Then we'll be given a public "ip-address" that we can use to connect to our VM   
+#In windows, open terminal/cmd/vs code terminal, it's all the same
+#To connect to a device, we use the ssh protocol
+#In digital ocean, they create a root user for us
 # ssh root@ip-address
 #Select yes and put the password for the VM
 # ls
 #It'll show the content of our current dir, currently we've only one
+#First thing to do is to updated all of the installed packages  
 # sudo apt update && sudo apt upgrade -y
-#This will updated all of the installed packages 
-#You can "keep the local version" or "install the package maintainer's version"
+#You can "keep the local version" or "install the package maintainer's version", we select maintainer's version
 # python3 --version
-#This will work, if we type only python it won't work
+#This will work, but if we type only python it won't work
+#We install pip if we don't have it installed 
 # sudo apt intall python3-pip
-#We'll use pip to create a virtual env, we'll use it on this machine as well
+#We'll use pip to create a virtual env, we'll use it on this machine as well like before (in the beginning)
 # sudo pip3 install virtualenv  
 #Now we install postgres 
 # sudo apt install postgresql postgresql-contrib -y
 #Before trying to connect it to our local machine, we'll connect from the ubuntu VM  
-#CLI for accessing the postgres db
+#CLI for accessing the postgres db is psql
 # psql --version
 # psql -U postgres
 #It'll give "peer auth error", it's not a usual log in failure 
