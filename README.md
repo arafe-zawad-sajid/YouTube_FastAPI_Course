@@ -1,13 +1,17 @@
-1. check video again to see the requirements
-2. check github repo to find the versions
-3. run pip commands manually:
-> pip install fastapi[all]
-> pip install psycopg2
+### Project Requirements:
+1. check [video](https://youtu.be/0sOvCWFmrtA?si=3kpURiT1pZ-H_4Lq) again to see the requirements
+2. check [github](https://github.com/Sanjeev-Thiyagarajan/fastapi-course) repo to find the versions
+3. you can install from "requirements.txt" or run these pip commands manually:
+```
+pip install fastapi[all]
+pip install psycopg2
 pip install sqlalchemy
 pip install passlib[bcrypt]
-pip install python-jose[cryptography] 
+pip install python-jose[cryptography]
 pip install alembic
+```
 
+### Different Versions:
 v1 - without database (just list)
 > upto 2:24:15 - https://youtu.be/0sOvCWFmrtA?si=GKaTt_O5GnXdvX6F&t=8659
 
