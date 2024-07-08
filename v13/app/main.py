@@ -20,7 +20,7 @@
 # python3 --version
 #This will work, but if we type only python it won't work
 #We install pip if we don't have it installed 
-# sudo apt intall python3-pip
+# sudo apt install python3-pip
 #We'll use pip to create a virtual env, we'll use it on this machine as well like before (in the beginning)
 # sudo pip3 install virtualenv  
 #Now we install postgres 
@@ -28,26 +28,30 @@
 #Before trying to connect it to our local machine, we'll connect from the ubuntu VM  
 #CLI for accessing the postgres db is psql
 # psql --version
+#Like before we log in to postgres using the def user "postgres" 
 # psql -U postgres
-#It'll give "peer auth error", it's not a usual log in failure 
+#It'll give "peer authentication error", it's not a usual log in failure 
 #On ubuntu, postgres has a special way of authenticating users by def 
-#When the ubuntu VM tries to connect to the db, it's called local auth
+#When the ubuntu VM tries to connect to the db itself, it's called local auth
 #Whereas, when we connect from our Windows machine to the postgres db on this ubuntu VM, that is peer auth
-#Since we're on the same machine that we're trying to connect to our db, it is considered as local auth
+#Since we're on the same machine that we're trying to connect to our db, postgres considers this as local auth
 #Peer auth is the def config for postgres, it takes the user that's logged in to the ubuntu machine
 #and tries to log in as that user, in this case psql tries to log in as root user 
-#It'll only allow a ubuntu user called postgres to be able to log in as the user called postgres on the postgres db in psql   
+#It'll only allow a ubuntu user called "postgres" to be able to log in as the user called "postgres" on the postgres db in psql   
 #It actually obtains the username from the linux kernel, so whoever you're logged in as is the only person you can log in as    
+#Because this is the def config, postgres actually created a user on our Ubuntu VM called "postgres"
 #We run this cmd to list out all the users 
 # sudo cat /etc/passwd 
-#We can see that a user called postgres was created on this machine, so we change our user
+#We can see that a user called postgres was created on this machine, we change our user
 # su - postgres
+#On the left we see we're logged in as user "postgres" 
 # psql -U postgres
-#We'll set up a password for this postgres suer
+#We've logged into the db, now we want to get rid of that peer auth
+#We'll set up a password for the "postgres" user
 # \password postgres
 #We exit out of the postgres console/terminal
 # \q
-#We're still logged in as the postgres user, we want to go back to the root user
+#We're still logged in as the "postgres" user, we want to go back to the root user
 # exit 
 #To modify the configs for postgres, we want to move to a diff dir 
 # cd /etc/postgresql/12/main
@@ -59,25 +63,30 @@
 #It'll not allow us to use pgAdmin from our Windows machine and connect to it remotely
 #To be able to connect to it remotely we've to change these configs
 # listen_addresses = *
-#It'll allow me to connect from any ip address but in practice we should make it secure
+#It'll allow me to connect from any ip address but best practice is to restrict it to some for security
 # sudo vi pg_hba.conf 
-#Now we change the configs under both local, edit peer > md5 for the two local method settings
-#under the host settings, edit ip adress > 0.0.0.0/0 for ipv4 and ::/0 for ipv6
+#Now we change the configs under both local, edit "peer" > "md5" for the two local method settings
+#Now we change the configs under both host, edit ip adress > "0.0.0.0/0" for ipv4 and "::/0" for ipv6
+#We have disabled peer auth and allowed any host ip to access the Ubuntu VM  
 #When we change any config file we've to restart the app 
 # systemctl restart postgresql
 # psql -U postgres
-#Enter the password and login
-#Now we try to connect to it using pgAdmin on our Windows 
+#Enter the password and login to postgres db
+#Now we try to connect to it using pgAdmin on our local Windows machine 
 #Create server, go to general and set name = fastapi-prod 
 #go to connection and set host name = ip address of our machine and provide password
+#We can see the def postgres db that is always installed
 #Generally on Ubuntu we shouldn't be logged in as root user, security risks  
-#So we create another user with root priviledges
+#So we create another user with root priviledges, that's better
+#When we install our API or python app, we're going to use this user for starting it
+#We don't want the root user to start the app because that would mean 
+#we're giving the app root access which is very risky
 # adduser sajid
 #We set the password
 # su - sajid 
 #Or we can exit out of root user and use ssh to directly log in as sajid
 # ssh sajid@ip-address
-#Enter the password   
+#Enter the password and log in  
 #Any time we create a user we have to give sudo access in order to perform root priviledged operations
 # usermod -aG sudo sajid  
 #exit and connect back as user sajid 
@@ -90,25 +99,94 @@
 #Now we create a folder for our app on our home dir
 # mkdir app
 # cd app
-# virtualenv venv
 #now we create a python venv like we did in the beginning of the tutorial 
+# virtualenv venv
 # ls -la
 #Now we activate the venv
 # source venv/bin/activate  
 #On the left side we see the venv activated
 # deactivate
 #This will deactivate the venv
+#Within our app dir we create the folder called "src" 
 # mkdir src
 # cd src
+#Now we copy all our code into the VM. Since we have our code on github, we just copy the repo link from there 
 # git clone github-clone-link .
-#This will install our repo in our current dir (/app/src) 
-#      
+#Here, github-clone-link = github.repo-link.git 
+#The dot "." in the end means current dir. This will install our repo in our current dir (/app/src) 
+#Activate venv again and move into "src" dir. We don't have any packages installed.      
+# cat requirements.txt
+# pip install -r requirements.txt
+#We're going to get an error saying "libpq" is missing. We need to deactivate the venv and install the apt 
+# deactivate
+# sudo apt install libpq-dev
+#Now we move into the "app" dir and activate our venv 
+# cd .. 
+# source venv/bin/activate
+#Now we try pip install again from the "app/src" folder 
+# cd src
+# pip install -r requirements.txt
+#Now we try to start our app 
+# uvicorn app.main:app
+#We get 8 validation errors, we need to setup our env vars on our linux VM
+#We can manually set them one by one
+# export ENV_VAR_NAME = VALUE
+#To see all our def and user created env vars
+# printenv
+#To delete an env var 
+# unset ENV_VAR_NAME
+#From our home dir we create an empty file
+# cd ~
+# touch .env
+#Lets check if it was created 
+# ls -la
+#Lets open the file and edit it 
+# vi .env
+#Here we provide the list of env vars, but before each env var we must type in "export"
+# export ENV_VAR_NAME = VALUE 
+#We save and set all the env vars from this file 
+# wq 
+# source .env
+#This will set all of those env vars
+# printenv
+# cat .env
+#We can see that the format is "export ENV_VAR_NAME=VALUE" 
+#We try to match the env var file in the ubuntu VM with our local windows machine, just key value pairs 
+#Before this modification we need to unset the env vars and printenv to check if they got removed
+#We also open up the ".env" file and delete everything, and copy paste the env vars from our ".env" file on windows
+# vi .env
+# set -o allexport; source /home/sajid/.env; set +o allexport 
+# printenv
+#It worked, but if we reboot we loose our env vars
+# sudo reboot
+#After the reboot we log in using the ssh command like before and printenv shows our env vars are gone
+#To make it persist we edit the ".profile" file on home and save the command that we used to set our env vars   
+# cd ~
+# ls -la
+# vi .profile
+#Go to the bottom of the file and paste the following command
+# set -o allexport; source /home/sajid/.env; set +o allexport
+# wq
+#If we log out and log in or if we reboot, the env vars will be loaded each time, it'll persist 
+#There are other methods to tackle this but this is the simplest 
+#Our ".env" file is stored in the home dir and not the app dir, we don't want it to accidentally get uploaded to git 
+#Now from windows, we use pgAdmin to create the db, it has no tables
+#We also need to make sure ".env" file is updated according to our production env and not our previous development environment 
+#In our db we have no tables, we use alembic to setup our tables per our models in our prod env
+#We should never create revisions in our prod env, we only create it in our dev env and check it into git 
+#We go to "src" dir and do alembic upgrade to setup our db per our latest revision
+# cd src
+# alembic upgrade head
+#It created all of the individual revisions one at a time so that we can roll back like before in our dev env
+#Now we activate our venv and move into "app/src" dir and run the uvicorn command
+# uvicorn app.main:app
+#We can find the ip-address:port-no that the uvicorn server is running on, so we try to connect to it from our browser 
+#But it didn't work 
 # 
 # 
-# 
-# 
-# 
-# 
+#   
+#    
+#  
 #  
 
 from fastapi import FastAPI
