@@ -11,6 +11,10 @@
 #To connect to a device, we use the ssh protocol
 #In digital ocean, they create a root user for us
 # ssh root@ip-address
+#to ssh my ubuntu server vm we do 
+# ssh azs@ip-address
+# sudo -i
+#this will log us in to root
 #Select yes and put the password for the VM
 # ls
 #It'll show the content of our current dir, currently we've only one
@@ -20,7 +24,7 @@
 # python3 --version
 #This will work, but if we type only python it won't work
 #We install pip if we don't have it installed 
-# sudo apt install python3-pip
+# sudo apt install python3-pip -y
 #We'll use pip to create a virtual env, we'll use it on this machine as well like before (in the beginning)
 # sudo pip3 install virtualenv  
 #Now we install postgres 
@@ -59,6 +63,7 @@
 #We have to edit the files "postgresql.conf" and "pg_hba.conf"
 # sudo vi postgresql.conf
 #In the "Connections And Authentication" section we see that listen_address = 'localhost'
+#On the ubuntu server vm we set it to "*", meaning all 
 #That means, only if we're logged into this ubuntu VM we can connect to this postgres db 
 #It'll not allow us to use pgAdmin from our Windows machine and connect to it remotely
 #To be able to connect to it remotely we've to change these configs
@@ -74,36 +79,38 @@
 #Enter the password and login to postgres db
 #Now we try to connect to it using pgAdmin on our local Windows machine 
 #Create server, go to general and set name = fastapi-prod 
+#Instead I named it server-laptop 
 #go to connection and set host name = ip address of our machine and provide password
+#Instead I provide ip address of ubuntu server vm 
 #We can see the def postgres db that is always installed
 #Generally on Ubuntu we shouldn't be logged in as root user, security risks  
 #So we create another user with root priviledges, that's better
 #When we install our API or python app, we're going to use this user for starting it
 #We don't want the root user to start the app because that would mean 
 #we're giving the app root access which is very risky
-# adduser sajid
+# adduser azs
 #We set the password
-# su - sajid 
-#Or we can exit out of root user and use ssh to directly log in as sajid
-# ssh sajid@ip-address
+# su - azs 
+#Or we can exit out of root user and use ssh to directly log in as azs
+# ssh azs@ubuntu-vm-ip-address
 #Enter the password and log in  
 #Any time we create a user we have to give sudo access in order to perform root priviledged operations
-# usermod -aG sudo sajid  
-#exit and connect back as user sajid 
+# usermod -aG sudo azs  
+#exit and connect back as user azs 
 # sudo apt upgrade
 #Give password 
 # pwd
-#It gives us the dir we're in, default home is "/home/sajid" 
+#It gives us the dir we're in, default home is "/home/azs" 
 # cd ~
 #It takes us to home dir 
 #Now we create a folder for our app on our home dir
 # mkdir app
 # cd app
 #now we create a python venv like we did in the beginning of the tutorial 
-# virtualenv venv
+# virtualenv .venv
 # ls -la
 #Now we activate the venv
-# source venv/bin/activate  
+# source .venv/bin/activate  
 #On the left side we see the venv activated
 # deactivate
 #This will deactivate the venv
@@ -122,7 +129,7 @@
 # sudo apt install libpq-dev
 #Now we move into the "app" dir and activate our venv 
 # cd .. 
-# source venv/bin/activate
+# source .venv/bin/activate
 #Now we try pip install again from the "app/src" folder 
 # cd src
 # pip install -r requirements.txt
@@ -178,14 +185,52 @@
 # cd src
 # alembic upgrade head
 #It created all of the individual revisions one at a time so that we can roll back like before in our dev env
-#Now we activate our venv and move into "app/src" dir and run the uvicorn command
+#Now we activate our venv and move into "app/src/<latest-version>" dir and run the uvicorn command
 # uvicorn app.main:app
-#We can find the ip-address:port-no that the uvicorn server is running on, so we try to connect to it from our browser 
-#But it didn't work 
-# 
-# 
-#   
+#We can find the ip-address:port-num that the uvicorn server is running on, so we try to connect to it from our browser 
+#But it didn't work, we needed to make sure that it can listen on any ip-address 
+#Setting it to "127.0.0.1:8000" means only the ubuntu VM can access it, we need to pass in one more flag 
+# uvicorn --host 0.0.0.0 app.main:app
+#Now we can go to chrome on our windows and access http://server_vm_ip:port_num
+#We don't need to provide a diff port because when we're gonna deploy it's always gonna use port 80 (HTTP) or 443 (HTTPS)   
+#Now we can access it on our windows. But if it crashes/reboots, it doesn't restart automatically. 
+#We're gonna use a process manager called Gunicorn 20.1.10. From the venv we install it.
+# pip install gunicorn
+# gunicorn 
+#If we get any errors we would need two other packages httptools 0.3.0, uvloop 0.16.0
+# pip install httptools
+# pip install uvtools 
+#it's not uvtools, it's uvloop, later on it was fixed 
+#We can have a num of workers and distribute the load balance between them 
+# gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
+#We set the ip-address "0.0.0.0" like before and specify a port then we want to listen on
+# gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+#We get an error uvloop missing, we just need to install the library 
+# pip install uvloop
+# pip freeze 
+#We should update our "requirements.txt" file and update it on git 
+#so when we deploy to other ubuntu machines it'll have all these extra packages
+#After it starts up we can see the 4 process id (pid) 
+# ps -aef | grep -i gunicorn
+#We can see the diff processes that we started, 1 parent and 4 child processes 
+#If we refresh chrome on windows we can see that we can access it normally
+#Currently it's running on our specific terminal, we want it to run in the background and automatically startup on boot
+#So we are going to create our own service that will startup our fastapi app automatically
+# cd /etc/systemd/system
+# ls
+#We can see all of the services installed on our machine, we'll create a new one 
+#On the source github repo (sanjeev's) we can see a file "gunicorn.service", we edit it
+#Line 3 starts up the network service first before the gunicorn service
+#This basically says that we need our network service running before we can start our API
+#The user and group should be the same: azs
+#The working dir is the dir where our service will be launched in, under v13     
+#Since we want the service to run the gunicorn cmd, we need the venv to run, so we point it to the ".venv/bin" folder  
+#Now we provide the path where gunicorn resides in (.venv/bin/gunicorn) and the cmd we want to run
 #    
+# 
+#  
+# 
+#     
 #  
 #  
 
