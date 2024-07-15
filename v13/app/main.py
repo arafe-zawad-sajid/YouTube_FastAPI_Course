@@ -162,7 +162,7 @@
 #Before this modification we need to unset the env vars and printenv to check if they got removed
 #We also open up the ".env" file and delete everything, and copy paste the env vars from our ".env" file on windows
 # vi .env
-# set -o allexport; source /home/sajid/.env; set +o allexport 
+# set -o allexport; source /home/azs/.env; set +o allexport 
 # printenv
 #It worked, but if we reboot we loose our env vars
 # sudo reboot
@@ -172,7 +172,7 @@
 # ls -la
 # vi .profile
 #Go to the bottom of the file and paste the following command
-# set -o allexport; source /home/sajid/.env; set +o allexport
+# set -o allexport; source /home/azs/.env; set +o allexport
 # wq
 #If we log out and log in or if we reboot, the env vars will be loaded each time, it'll persist 
 #There are other methods to tackle this but this is the simplest 
@@ -219,18 +219,23 @@
 # cd /etc/systemd/system
 # ls
 #We can see all of the services installed on our machine, we'll create a new one 
-#On the source github repo (sanjeev's) we can see a file "gunicorn.service", we edit it
-#Line 3 starts up the network service first before the gunicorn service
+#On the source github repo (sanjeev's) we can see a file "gunicorn.service", we make some edits
+#Under [Unit] we just give a description of what it's gonna do
+#Line 3 tells our ubuntu vm when to actually start this service
 #This basically says that we need our network service running before we can start our API
-#The user and group should be the same: azs
-#The working dir is the dir where our service will be launched in, under v13     
-#Since we want the service to run the gunicorn cmd, we need the venv to run, so we point it to the ".venv/bin" folder  
-#Now we provide the path where gunicorn resides in (.venv/bin/gunicorn) and the cmd we want to run
-#    
-# 
-#  
-# 
-#     
+#Then under [Service] we have to specify what user and group is going to run this service,
+#It needs to be associated with a user, these two should be the same (azs)
+#The working dir is the dir where our service will be launched in
+#this should point to the dir our app is running in, home/azs/app/src/v13 (diff from Sanjeev's) 
+#Since we want the service to run the gunicorn cmd, we need it to run in a venv
+#so we set the venv through this script, we point it to the "home/azs/app/.venv/bin" folder  
+#Now we provide the path where gunicorn resides in (.venv/bin/gunicorn) and the cmd we want to run 
+# cd /etc/systemd/system   
+#Under this dir we create the "api.servcie" service 
+# sudo vi api.service
+#Now we just copy paste everything from that "gunicorn.service" file
+#Now we start our "api.service" 
+# systemctl start api    
 #  
 #  
 
