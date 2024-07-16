@@ -49,7 +49,10 @@ v12 - application deployment (Heroku)
 > upto 12:00:00 - https://youtu.be/0sOvCWFmrtA?si=NuqsPRAmfh4TeFuN&t=43226
 
 v13 - application deployment (Ubuntu Server)
-> upto 13:00:00 - https://youtu.be/0sOvCWFmrtA?si=AiXBK_ArxZ6mF2Wh&t=46699
+> upto 13:04:40 - https://youtu.be/0sOvCWFmrtA?si=KADPIpud36oupSMj&t=47081
+
+v14 - application deployment (nginx)
+> upto 
 
 
 
