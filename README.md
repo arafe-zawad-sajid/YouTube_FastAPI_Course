@@ -1,3 +1,6 @@
+"Python API Development - Comprehensive Course for Beginners" by FreeCodeCamp
+> link - https://youtu.be/0sOvCWFmrtA?si=1Tm3bmQs-h-S71Pl
+
 ### Project Requirements:
 1. check [video](https://youtu.be/0sOvCWFmrtA?si=3kpURiT1pZ-H_4Lq) again to see the requirements
 2. check [github](https://github.com/Sanjeev-Thiyagarajan/fastapi-course) repo to find the versions
