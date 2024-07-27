@@ -240,9 +240,10 @@
 #so we add another line to set the "EnvironmentFile" and then do a daemon reload and restart api
 # systemctl daemon-reload 
 # systemctl restart api
-#We can also setup a config file for our new service but this is easier
+#We can also setup a config file for our new service but this process is easier
 #Now we want to setup this service to automatically startup on reboot
 # sudo systemctl enable api 
+#Additionally added "Restart=always" in 'api.service' file
 # 
 
 
