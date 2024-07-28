@@ -55,7 +55,9 @@ v13 - application deployment (Ubuntu Server)
 > upto 13:04:40 - https://youtu.be/0sOvCWFmrtA?si=KADPIpud36oupSMj&t=47081
 
 v14 - application deployment (nginx)
-> upto 
+> upto 13:19:45 - https://youtu.be/0sOvCWFmrtA?si=nHDs1INufVRGxFlu&t=47989
+
+
 
 
 
