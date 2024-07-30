@@ -1,4 +1,4 @@
-#run: "uvicorn v10.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v13.app.main:app" and append: "--reload" for auto reload
  
 #--- Application Deployment (Ubuntu Server) ---#
 #We can host our ubuntu server on any major cloud providers like AWS, Azure, Digital Ocean, etc.

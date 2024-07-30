@@ -20,6 +20,6 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
 
     class Config:
-        env_file = ".env"  #starts looking from the root dir (FastAPI_Project)
+        env_file = "v13/.env"  #starts looking from the root dir (FastAPI_Project)
 
 settings = Settings()

@@ -1,4 +1,4 @@
-#run: "uvicorn v10.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v14.app.main:app" and append: "--reload" for auto reload
  
 #--- Application Deployment (NGINX) ---#
 #Currently when we send a request to our server, the specific ip and port we configured our app to listen on 

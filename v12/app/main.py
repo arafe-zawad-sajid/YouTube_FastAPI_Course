@@ -1,4 +1,4 @@
-#run: "uvicorn v10.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v10.app.main:app" and append: "--reload" for auto reload
  
 #--- Application Deployment (Heroku) ---#
 #Heroku is not free from 2022, it used to be, instead use Render
