@@ -10,6 +10,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)  #only for sqlite we have to pas
 
 #to talk to the sql db we make use of a session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()  #all models that we'll define to create our tables will extend this Base class
 
 

@@ -1,6 +1,16 @@
 ### "Python API Development - Comprehensive Course for Beginners" on YouTube (FreeCodeCamp)
 > link - https://youtu.be/0sOvCWFmrtA?si=1Tm3bmQs-h-S71Pl
 
+```
+1. Fully featured API (Authentication, CRUD Operations, Schema Validation, Documentation)
+2. SQL (Raw queries, ORMS)
+3. Database Migration Tool (Alembic)
+4. Postman (test API during development)
+5. Automated Integration Testing
+6. Deployment (Ubuntu, Heroku, Docker)
+7. CI/CD pipeline (GitHub Actions)
+```
+
 ### Project Requirements:
 1. check [video](https://youtu.be/0sOvCWFmrtA?si=3kpURiT1pZ-H_4Lq) again to see the requirements
 2. check [github](https://github.com/Sanjeev-Thiyagarajan/fastapi-course) repo to find the versions
@@ -40,7 +50,7 @@ v8 - database relationships, query parameters
 > upto 8:33:38 - https://youtu.be/0sOvCWFmrtA?si=G8Hif-oK9E504EJU&t=30818
 
 v9 - environment variables
-> upto 9:07:40 - https://youtu.be/0sOvCWFmrtA?si=W0TaM91E05b497c2&t=32860
+> upto 9:21:20 - https://youtu.be/0sOvCWFmrtA?si=MxTGX-evrsJaHS7c&t=33680
 
 v10 - voting system, SQL JOIN
 > upto 10:30:17 - https://youtu.be/0sOvCWFmrtA?si=JGjMnouIhwtH75HM&t=37817

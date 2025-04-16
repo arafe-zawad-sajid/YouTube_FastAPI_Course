@@ -21,5 +21,6 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"  #starts looking from the root dir (FastAPI_Project)
+                           #alembic commands don't work if env_file = "v11/.env"
 
 settings = Settings()

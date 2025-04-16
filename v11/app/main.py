@@ -1,6 +1,7 @@
 #run: "uvicorn v10.main:app" and append: "--reload" for auto reload
 
 #--- Database Migration ---#
+# https://alembic.sqlalchemy.org/en/latest/tutorial.html
 #Currently whenever we want to change our table properties we have to 
 #drop the table and create it again, this isn't ideal 
 #We're going to use a tool called Alembic so that whenever we add a col
@@ -102,11 +103,13 @@ from fastapi.middleware.cors import CORSMiddleware  #to handle CORS policy
 
 
 #setting up stuff
+
 # models.Base.metadata.create_all(bind=engine)  #since we've alembic we don't need this
 app = FastAPI()  #fastapi instance
 
 # origins = ["https://www.google.com", "http://www.youtube.com"]  #list of domains that can talk to our API
 origins = ["*"]  #for a public API we allow all domains
+                 #for a specific web app we should provide a strict list of origins
 
 #middleware is a term used in web frameworks, it's basically a func that runs before every request
 #If someone sends a request to our app, before it goes through the routers 

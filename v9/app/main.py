@@ -1,4 +1,4 @@
-#run: "uvicorn v9.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v9.app.main:app" and append: "--reload" for auto reload
 
 #--- Environment Variables ---#
 #In a production env, we need a way for our code to auto update and point to the actual production db 

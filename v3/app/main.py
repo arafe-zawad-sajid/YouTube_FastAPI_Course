@@ -1,4 +1,4 @@
-#run: "uvicorn v3.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v3.app.main:app" and append: "--reload" for auto reload
 
 #--- With ORM (SQLAlchemy) ---#
 #one way to interract with the db is to use the def postgresql driver (psycopg2) 
@@ -11,7 +11,7 @@
 #for orm, fastapi uses regular python to send commands to orm 
 #which converts it to regular sql using the same db driver (psycopg2) to talk to the db
 #databases only talk sql
-#sql alchemy is the most popular python orm, it's a standalone lib
+#sql alchemy is the most popular python orm, it's a stand-alone lib
 #sql alchemy doesn't actually know how to talk to a db, it uses the underlying driver psycopg2
 #
 #schema/pydantic model vs. orm/sql alchemy model
@@ -86,8 +86,10 @@ async def root():  #function
 def get_posts(db: Session=Depends(get_db)):  #this input arg creates a session to our db so that we can perform some operations
     # cursor.execute(""" SELECT * FROM posts """)
     # posts = cursor.fetchall()  #retrieve multiple posts
-
-    posts = db.query(models.Post).all()
+    
+    # post_query = db.query(models.Post)  #an INSERT statement
+    # print(post_query)
+    posts = db.query(models.Post).all()  #retrieves all post from db
     return {"data": posts}
 
 
@@ -105,9 +107,10 @@ def create_posts(post: schemas.Post, db: Session=Depends(get_db)):  #Post pydant
     #post.dict() gives us a dict which we need to convert to the above format
     new_post = models.Post(**post.dict())  #auto unpack all fields of pydantic model 
                                            #if we add an extra field to our model it will still work
+    # print(new_post)  #models.Post object's memory address 
     db.add(new_post)  #add it to db
     db.commit()  #commit it
-    db.refresh(new_post)  #retrieve the new post we created in db
+    db.refresh(new_post)  #retrieve the new post we created in db and save it to "new_post"
     return {"data": new_post}  #sends this to the Post request
 
 
@@ -135,13 +138,13 @@ def delete_post(id: int, db: Session=Depends(get_db)):
     # deleted_post = cursor.fetchone()
     # conn.commit()
     
-    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.id == id)  #retrieving post
     # print(type(post))  #<class 'sqlalchemy.orm.query.Query'>
     if post_query.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} does not exist")
-    post_query.delete(synchronize_session=False)
-    db.commit()
+    post_query.delete(synchronize_session=False)  #delete post
+    db.commit()  #finalize deletion
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -153,12 +156,12 @@ def update_post(id: int, post: schemas.Post, db: Session=Depends(get_db)):  #val
     # updated_post = cursor.fetchone()
     # conn.commit()
 
-    post_query = db.query(models.Post).filter(models.Post.id == id)  #query
+    post_query = db.query(models.Post).filter(models.Post.id == id)  #retrieving post
     if post_query.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} does not exist")
-    post_query.update(post.dict(), synchronize_session=False)  #update
-    db.commit()  #commit
+    post_query.update(post.dict(), synchronize_session=False)  #update post
+    db.commit()  #finalize update
     return {"data": post_query.first()}  #get the first one
 
 

@@ -31,9 +31,12 @@ def get_posts(db: Session=Depends(get_db), current_user: int=Depends(oauth2.get_
     # posts = db.query(models.Post).filter(
     #     models.Post.title.contains(search)).limit(limit).offset(skip).all()
     #LEFT OUTER JOIN
-    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+    #by def it's LEFT INNER JOIN, so we need to set it as OUTER
+    results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(
-        models.Post.title.contains(search)).limit(limit).offset(skip).all()
+        models.Post.title.contains(search)).limit(limit).offset(skip)
+    # print(results)  #prints the SQL query
+    posts = results.all()
     # print(current_user.password)
     return posts  #instead of sending dict we return post 
                   #FastAPI can automatically serialize it and convert it to JSON

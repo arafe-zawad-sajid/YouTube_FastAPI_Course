@@ -1,4 +1,4 @@
-#run: "uvicorn v2.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v2.app.main:app" and append: "--reload" for auto reload
 
 #--- With Database (PostgreSQL) ---#
 # SELECT * FROM products;  #select all columns from products table
@@ -12,11 +12,11 @@
 
 # SELECT * FROM products WHERE name='TV';  #varchar in single quotes, double quotes give error
 
-# SELECT * FROM products WHERE price>80;
+# SELECT * FROM products WHERE price>80;  #non-inclusive
 # SELECT * FROM products WHERE price>=80;
 
 # SELECT * FROM products WHERE inventory!=0;
-# SELECT * FROM products WHERE inventory<>0;
+# SELECT * FROM products WHERE inventory<>0;  # works like not equals (!=)
 
 # SELECT * FROM products WHERE inventory>0 AND price>20;
 
@@ -25,9 +25,11 @@
 # SELECT * FROM products WHERE id=1 OR id=2 OR id=3;
 # SELECT * FROM products WHERE id IN (1,2,3);  #products with id in the list
 
-# SELECT * FROM products WHERE name LIKE 'TV%';  #products starting with TV
-# SELECT * FROM products WHERE name LIKE '%en%';  #products that does not have 'en' in their name
+# SELECT * FROM products WHERE name LIKE 'TV%';  #products starting with 'TV'
+# SELECT * FROM products WHERE name LIKE '%e';  #products ending with 'e'
+# SELECT * FROM products WHERE name LIKE '%en%';  #products have 'en' in their name
 # SELECT * FROM products WHERE name NOT LIKE '%en%';  #products that does not have 'en' in their name
+#kind of like regular expressions  
 
 # SELECT * FROM products ORDER BY price DESC;  #orders in ASC by default
 # SELECT * FROM products ORDER BY inventory DESC, price ASC;  #sorts by inventory DESC then as tie breaker we sort by price ASC
@@ -39,13 +41,12 @@
 
 # SELECT * FROM products ORDER BY id LIMIT 5 OFFSET 2;  #offset 2 ignores/skips past the first 2
 
-# INSERT INTO products (price, name, inventory) VALUES (10000, 'Car', 1000) RETURNING id;  #adds a product then returns all the cols
+# INSERT INTO products (price, name, inventory) VALUES (10000, 'Car', 1000) RETURNING *;  #adds a product then returns all the cols
 # INSERT INTO products (price, name, inventory) VALUES (10000, 'Car', 1000), (50, 'Laptop', 25), (60, 'Monitor', 4) RETURNING id;  #adds products then returns the id col
 
 # DELETE FROM products WHERE id=10;
-# DELETE FROM products WHERE id=11 RETURNING *;
+# DELETE FROM products WHERE id=11 RETURNING *;  #returns the product that was deleted
 # DELETE FROM products WHERE inventory=0;
-
 
 # UPDATE products SET name='Flower', price=40 WHERE id=25;
 # UPDATE products SET is_sale=true WHERE id=30 RETURNING *;
@@ -78,8 +79,11 @@ class Post(BaseModel):
 #--- Connecting to Database ---#
 while True:
     try:
+        # orginal db name is fastapi
         conn = psycopg2.connect(host='localhost', database='fastapi', 
                                 user='postgres', password='admin', cursor_factory=RealDictCursor)
+        #when you make a query to retrieve a bunch of rows from the db it doesn't include the col names by default,
+        #it just gives the values of the cols, so we pass an extra field to get the col names 
         
         cursor = conn.cursor()
         print('DB conn was successful')
@@ -110,7 +114,7 @@ def get_posts():
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_posts(post: Post):
     # cursor.execute(""" INSERT INTO posts (title, content, published)
-    #                VALUES ({new_post.title}, {new_post.content}, {new_post.published}) """)
+    #                VALUES ({post.title}, {post.content}, {post.published}) """)
     #using f strings makes us vulnerable to SQL injection attack
     cursor.execute(""" INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """, 
                    (post.title, post.content, post.published))
@@ -123,7 +127,7 @@ def create_posts(post: Post):
 #--- Get A Post ---#
 @app.get("/posts/{id}")
 def get_post(id: int):
-    cursor.execute(""" SELECT * FROM posts WHERE id=%s """, (str(id), ))
+    cursor.execute(""" SELECT * FROM posts WHERE id=%s """, (str(id), ))  #extra comma bcz tuple
     post = cursor.fetchone()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -150,6 +154,7 @@ def delete_post(id: int):
 def update_post(id: int, post: Post):  #validate the data from frontend that is stored in post with our Post schema
     cursor.execute(""" UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING * """,
                    (post.title, post.content, post.published, str(id)))
+    #provide WHERE condition or it updates all posts
     updated_post = cursor.fetchone()
     conn.commit()
     if updated_post == None:

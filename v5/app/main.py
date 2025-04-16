@@ -1,4 +1,4 @@
-#run: "uvicorn v5.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v5.app.main:app" and append: "--reload" for auto reload
 
 #--- User Registration ---#
 #
@@ -77,8 +77,8 @@ def update_post(id: int, post: schemas.PostCreate, db: Session=Depends(get_db)):
 
 
 #--- Create User ---#
-@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
-def create_user(user: schemas.UserCreate, db: Session=Depends(get_db)):
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)  #response
+def create_user(user: schemas.UserCreate, db: Session=Depends(get_db)):  #request
     #hash password - user.password
     hashed_password = utils.hash(user.password)
     user.password = hashed_password

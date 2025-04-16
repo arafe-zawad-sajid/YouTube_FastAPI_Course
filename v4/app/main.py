@@ -29,8 +29,7 @@ async def root():  #function
 @app.get("/posts", response_model=List[schemas.Post])  #response with a list of schemas.Post models
 def get_posts(db: Session=Depends(get_db)):
     posts = db.query(models.Post).all()
-    return posts  #instead of sending dict we return post 
-                  #FastAPI can automatically serialize it and convert it to JSON
+    return posts
 
 
 #--- Create Posts ---#
@@ -55,7 +54,8 @@ def get_post(id: int, db: Session=Depends(get_db)):
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} was not found")
-    return post
+    return post  #instead of sending dict we return post 
+                 #FastAPI can automatically serialize it and convert it to JSON
 
 
 #--- Delete A Post ---#

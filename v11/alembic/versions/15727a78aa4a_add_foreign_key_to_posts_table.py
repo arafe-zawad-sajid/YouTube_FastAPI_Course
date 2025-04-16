@@ -22,11 +22,11 @@ def upgrade() -> None:
     op.add_column("posts",
                   sa.Column("owner_id", sa.Integer(), nullable=False)
                   )
-    op.create_foreign_key("posts_users_fk", 
+    op.create_foreign_key("posts_users_fk",  #the constraint is in the source table (posts)
                           source_table="posts", 
                           referent_table="users", 
-                          local_cols=["owner_id"],
-                          remote_cols=["id"],
+                          local_cols=["owner_id"],  #col in source table (posts)
+                          remote_cols=["id"],  #col in referent table (users)
                           ondelete="CASCADE"
                           )
     pass

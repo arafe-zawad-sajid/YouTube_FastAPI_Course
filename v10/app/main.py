@@ -1,4 +1,4 @@
-#run: "uvicorn v10.main:app" and append: "--reload" for auto reload
+#run: "uvicorn v10.app.main:app" and append: "--reload" for auto reload
 
 #--- Voting System ---#
 #A user should be able to like a post once
