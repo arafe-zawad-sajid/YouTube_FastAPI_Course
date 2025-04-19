@@ -44,7 +44,7 @@
 #we break down the URL into multiple env vars in heroku dyno settings as we did for orm 
 #After setting up the env vars we restart heroku dyno
 # heroku ps --help
-# heroku ps restart
+# heroku ps: restart
 # heroku logs -t
 #From logs we can see that we got a port assigned by heroku, this is why we provide the port variable
 #However we don't need this port to access the app URL
