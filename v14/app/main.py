@@ -74,8 +74,10 @@
 # sudo ufw status
 #If you want to delete a rule 
 # sudo ufw delete allow http
-#     
-# 
+#git add, git commit and git push to upload your code from local machine to github     
+#git pull to download your code from github to local machine
+#we git add, commit, push after edit on local machine and git pull on ubuntu server
+#   
 
 
 from fastapi import FastAPI

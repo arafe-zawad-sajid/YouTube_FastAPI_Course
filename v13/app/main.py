@@ -293,6 +293,6 @@ app.include_router(vote.router)
 #path operation/route
 @app.get("/")  #decorator
 async def root():  #function
-    return {"message": "welcome to my api"}  #sends this to the Get request
+    return {"message": "welcome to my api!"}  #sends this to the Get request
 
 
