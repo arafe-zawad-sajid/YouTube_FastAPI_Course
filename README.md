@@ -1,6 +1,7 @@
 ### "Python API Development - Comprehensive Course for Beginners" on YouTube (FreeCodeCamp)
 > link - https://youtu.be/0sOvCWFmrtA?si=1Tm3bmQs-h-S71Pl
 
+### Topics covered:
 ```
 1. Fully featured API (Authentication, CRUD Operations, Schema Validation, Documentation)
 2. SQL (Raw queries, ORMS)
@@ -22,6 +23,12 @@ pip install sqlalchemy
 pip install passlib[bcrypt]
 pip install python-jose[cryptography]
 pip install alembic
+```
+4. during deployment we installed some more libraries:
+```
+pip install gunicorn
+pip install httptools
+pip install uvloop
 ```
 
 ### Different Versions:

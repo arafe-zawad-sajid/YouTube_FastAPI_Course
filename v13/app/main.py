@@ -69,6 +69,8 @@
 #To be able to connect to it remotely we've to change these configs
 # listen_addresses = *
 #It'll allow me to connect from any ip address but best practice is to restrict it to some for security
+#Hit the "insert" key to edit the file and make necessary edits
+#Now hit the "escape" key on keyboard, type ":wq" and hit the "enter" key to save
 # sudo vi pg_hba.conf 
 #Now we change the configs under both local, edit "peer" > "md5" for the two local method settings
 #Now we change the configs under both host, edit ip adress > "0.0.0.0/0" for ipv4 and "::/0" for ipv6
@@ -102,7 +104,8 @@
 # pwd
 #It gives us the dir we're in, default home is "/home/azs" 
 # cd ~
-#It takes us to home dir 
+# cd /home/azs
+#both are the same, it takes us to home dir 
 #Now we create a folder for our app on our home dir
 # mkdir app
 # cd app
@@ -135,6 +138,8 @@
 # pip install -r requirements.txt
 #Now we try to start our app 
 # uvicorn app.main:app
+# uvicorn v13.app.main:app 
+#use the 2nd cmd instead since my directories are organized diff
 #We get 8 validation errors, we need to setup our env vars on our linux VM
 #We can manually set them one by one
 # export ENV_VAR_NAME = VALUE

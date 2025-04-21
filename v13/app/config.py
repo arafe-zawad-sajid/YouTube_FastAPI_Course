@@ -21,5 +21,6 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = "v13/.env"  #starts looking from the root dir (FastAPI_Project)
+                               #works when I'm running from ubuntu server 
 
 settings = Settings()

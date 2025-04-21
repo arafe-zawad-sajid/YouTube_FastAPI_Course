@@ -29,12 +29,17 @@
 # systemctl restart nginx
 #Now if we visit our ip we see our api. We see it's HTTP, let's set it to HTTPS. We'll need to purchase a domain name.
 #We can purchase from namecheap/go daddy/amazon, ".xyz" is the cheapest domain
+#Now we have to setup a couple of rules. We need to point our domain name to digital ocean. We can use their guide.
 # https://docs.digitalocean.com/products/networking/dns/getting-started/dns-registrars/
-#On digital ocean, goto "manage DNS" and add the domain. Then create "A Record" where hostname is '@' and direct it to the droplet.
-#So if we visit our domain, it'll take us to our digital ocean server. We need to wait an hour for the DNS to propagate.
+#For Namecheap, under the "name server" section we have to set "custom DNS" and point to the DNS servers of Digital Ocean  
+#On digital ocean, goto "manage DNS" and add the domain. 
+#Then create "A Record" (root of our domain) where hostname is '@' and direct it to the droplet.
+#So if we visit our domain, it'll take us to our digital ocean server. We need to wait upto an hour for the DNS to propagate.
 #We also create a "CNAME Record" with hostname as "www", alias of "@". The "CNAME Record" points to "A Record" 
-#We can visit the domain in both ways. Now we setup the SSL to handle secure HTTPS traffic.
+#We can visit the domain in both ways (through the domain and the sub-domain) 
+#Now we setup the SSL to handle secure HTTPS traffic.
 #"certbot" is a website for "lets encrypt" which is a free SSL service. We select "get certbot instructions" and follow it.
+# https://certbot.eff.org/
 #It'll auto reconfigure NGINX for us.     
 #First we see if "snapd" is installed, let's check it
 # snap --version
@@ -42,14 +47,35 @@
 # sudo snap install --classic certbot
 #Now we want certbot to auto configure NGINX for us
 # sudo certbot --nginx  
-#when it asks for the domain name we put both "A Record" and "CNAME Record"  
-#
+#when it asks for the domain name we put both "A Record" (domain) and "CNAME Record" (sub-domain)
+#It'll edit our "default" config file in /etc/nginx/sites-enabled/default 
+#The main change is the server block for SSL configuration, we're gonna listen on port 443 (default https port),
+#added the two certificates that were generated, added a few other configs   
+#It also added another server block to redirect http request to https, we'll never be able to use http from now on 
+#Now when we visit our domain/sub-domain we'll see both are https, now we have https setup on our nginx server 
+#We want nginx to auto start on reboot, this is the default config though 
+# systemctl status nginx
+#If it's disabled we just enable it
+# systemctl enable nginx
+#Now we setup a firewall on our machine for basic security, we make sure we only open ports that we'll be using
+#Right now we can access any port, but we don't want people to connect to diff services on our machine 
+# sudo ufw status
+# sudo ufw allow http
+# sudo ufw allow https
+#Since it's a public server, we allow for all http and https traffic
+# sudo ufw allow ssh
+#We allow this to be able to ssh to the server from local machine 
+# sudo ufw allow 5432
+#We don't need to open up our database port since our FastAPI app is running on the server, 
+#if we didn't want anyone from outside to access our database we shouldn't allow it, this is better
+#but if we want to connect using pgAdmin from local machine then we have to allow it
+# sudo ufw enable
+# exit
+# sudo ufw status
+#If you want to delete a rule 
+# sudo ufw delete allow http
+#     
 # 
-# 
-# 
-# 
-#   
-
 
 
 from fastapi import FastAPI
